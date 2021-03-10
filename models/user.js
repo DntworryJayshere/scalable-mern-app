@@ -2,6 +2,22 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const crypto = require('crypto');
 
+module.exports = (mongoose) => {
+	const Tutorial = mongoose.model(
+		'tutorial',
+		mongoose.Schema(
+			{
+				title: String,
+				description: String,
+				published: Boolean,
+			},
+			{ timestamps: true }
+		)
+	);
+
+	return Tutorial;
+};
+
 const userSchema = new Schema(
 	{
 		username: {
@@ -80,7 +96,7 @@ userSchema.methods = {
 		return Math.round(new Date().valueOf() * Math.random()) + '';
 	},
 };
-// export user model
 
+// export user model
 const User = mongoose.model('User', userSchema);
 module.exports = User;
