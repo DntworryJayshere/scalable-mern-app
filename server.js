@@ -1,21 +1,14 @@
 const express = require('express');
-const mongoose = require('mongoose');
+const connectDB = require('./config/db');
 const morgan = require('morgan');
 const cors = require('cors');
-require('dotenv').config();
+const dotenv = require('dotenv');
+dotenv.config();
 
 const app = express();
 
 // db
-mongoose
-	.connect(process.env.MONGO_URI, {
-		useCreateIndex: true,
-		useNewUrlParser: true,
-		useUnifiedTopology: true,
-		useFindAndModify: false,
-	})
-	.then(() => console.log('DB connected'))
-	.catch((err) => console.log(err));
+connectDB();
 
 // import routes
 const authRoutes = require('./routes/auth');
