@@ -3,25 +3,31 @@
 	"version": "1.0.0",
 	"description": "",
 	"main": "index.js",
+	"homepage": "https://github.com/DntworryJayshere/scalable-mern-app",
 	"scripts": {
 		"start": "node server",
 		"server": "nodemon server",
 		"client": "npm start --prefix client",
-		"dev": "concurrently \"npm run server\" \"npm run client\""
+		"dev": "concurrently \"npm run server\" \"npm run client\"",
+		"ree": "rm -rf node_modules/ && cd client && rm -rf node_modules/"
 	},
 	"keywords": [],
 	"author": "",
 	"license": "ISC",
 	"dependencies": {
-		"aws-sdk": "^2.601.0",
+		"aws-sdk": "^2.861.0",
 		"cors": "^2.8.5",
 		"dotenv": "^8.2.0",
 		"express": "^4.17.1",
-		"express-jwt": "^5.3.1",
-		"express-validator": "^6.3.1",
+		"express-jwt": "^5.3.3",
+		"express-validator": "^6.10.0",
 		"jsonwebtoken": "^8.5.1",
-		"mongoose": "^5.11.8",
-		"morgan": "^1.9.1",
-		"nodemon": "^2.0.2"
+		"mongoose": "^5.11.15",
+		"morgan": "^1.10.0",
+		"nodemon": "^2.0.7"
+	},
+	"devDependencies": {
+		"concurrently": "^5.2.0",
+		"nodemon": "^2.0.4"
 	}
 }
