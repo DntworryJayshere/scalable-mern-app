@@ -1,15 +1,19 @@
 {
-	"name": "server",
+	"name": "scaleable-mern-app",
 	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
-	"homepage": "https://github.com/DntworryJayshere/scalable-mern-app",
+	"description": "MERN app using NextJS that will be deployed through AWS",
+	"main": "server.js",
+	"homepage": "https://github.com/DntworryJayshere/scalable-mern-app#readme",
 	"scripts": {
-		"start": "node server",
-		"server": "nodemon server",
-		"client": "npm start --prefix client",
+		"start": "node server.js",
+		"server": "nodemon server.js",
+		"client": "cd client && npm run devF",
 		"dev": "concurrently \"npm run server\" \"npm run client\"",
 		"ree": "rm -rf node_modules/ && cd client && rm -rf node_modules/"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/DntworryJayshere/scalable-mern-app.git"
 	},
 	"keywords": [],
 	"author": "",
@@ -23,8 +27,7 @@
 		"express-validator": "^6.10.0",
 		"jsonwebtoken": "^8.5.1",
 		"mongoose": "^5.11.15",
-		"morgan": "^1.10.0",
-		"nodemon": "^2.0.7"
+		"morgan": "^1.10.0"
 	},
 	"devDependencies": {
 		"concurrently": "^5.2.0",
