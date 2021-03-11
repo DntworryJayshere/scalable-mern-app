@@ -2,22 +2,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const crypto = require('crypto');
 
-module.exports = (mongoose) => {
-	const Tutorial = mongoose.model(
-		'tutorial',
-		mongoose.Schema(
-			{
-				title: String,
-				description: String,
-				published: Boolean,
-			},
-			{ timestamps: true }
-		)
-	);
-
-	return Tutorial;
-};
-
 const userSchema = new Schema(
 	{
 		username: {
