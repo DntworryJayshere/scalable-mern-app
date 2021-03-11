@@ -1,28 +1,25 @@
 import { useState, useEffect } from 'react';
-import Layout from '../components/Layout';
+import Layout from '../../../components/Layout';
 import Router from 'next/router';
 import axios from 'axios';
-import { showSuccessMessage, showErrorMessage } from '../helpers/alerts';
-import { API } from '../config';
-import { isAuth } from '../helpers/auth';
+import { showSuccessMessage, showErrorMessage } from '../../../helpers/alerts';
+import { API } from '../../../config';
+import { isAuth, updateUser } from '../../../helpers/auth';
+import withUser from '../../withUser';
 
-const Register = () => {
+const Profile = ({ user, token }) => {
     const [state, setState] = useState({
-        name: 'Ryan',
-        email: 'ryan@gmail.com',
-        password: 'rrrrrr',
+        name: user.name,
+        email: user.email,
+        password: '',
         error: '',
         success: '',
-        buttonText: 'Register',
+        buttonText: 'Update',
         loadedCategories: [],
-        categories: []
+        categories: user.categories
     });
 
     const { name, email, password, error, success, buttonText, loadedCategories, categories } = state;
-
-    useEffect(() => {
-        isAuth() && Router.push('/');
-    }, []);
 
     // load categories when component mounts using useEffect
     useEffect(() => {
@@ -54,7 +51,12 @@ const Register = () => {
             loadedCategories &&
             loadedCategories.map((c, i) => (
                 <li className="list-unstyled" key={c._id}>
-                    <input type="checkbox" onChange={handleToggle(c._id)} className="mr-2" />
+                    <input
+                        type="checkbox"
+                        onChange={handleToggle(c._id)}
+                        checked={categories.includes(c._id)}
+                        className="mr-2"
+                    />
                     <label className="form-check-label">{c.name}</label>
                 </li>
             ))
@@ -62,68 +64,41 @@ const Register = () => {
     };
 
     const handleChange = name => e => {
-        setState({ ...state, [name]: e.target.value, error: '', success: '', buttonText: 'Register' });
+        setState({ ...state, [name]: e.target.value, error: '', success: '', buttonText: 'Update' });
     };
 
     const handleSubmit = async e => {
         e.preventDefault();
-        console.table({
-            name,
-            email,
-            password,
-            categories
-        });
-        setState({ ...state, buttonText: 'Registering' });
+        setState({ ...state, buttonText: 'Updating...' });
         try {
-            const response = await axios.post(`${API}/register`, {
-                name,
-                email,
-                password,
-                categories
-            });
+            const response = await axios.put(
+                `${API}/user`,
+                {
+                    name,
+                    password,
+                    categories
+                },
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
             console.log(response);
-            setState({
-                ...state,
-                name: '',
-                email: '',
-                password: '',
-                buttonText: 'Submitted',
-                success: response.data.message
+            updateUser(response.data, () => {
+                setState({
+                    ...state,
+                    buttonText: 'Updated',
+                    success: 'Profile updated successfully'
+                });
             });
         } catch (error) {
             console.log(error);
-            setState({ ...state, buttonText: 'Register', error: error.response.data.error });
+            setState({ ...state, buttonText: 'Update', error: error.response.data.error });
         }
     };
 
-    // const handleSubmit = e => {
-    //     e.preventDefault();
-    //     setState({ ...state, buttonText: 'Registering' });
-    //     // console.table({ name, email, password });
-    //     axios
-    //         .post(`http://localhost:8000/api/register`, {
-    //             name,
-    //             email,
-    //             password
-    //         })
-    //         .then(response => {
-    //             console.log(response);
-    //             setState({
-    //                 ...state,
-    //                 name: '',
-    //                 email: '',
-    //                 password: '',
-    //                 buttonText: 'Submitted',
-    //                 success: response.data.message
-    //             });
-    //         })
-    //         .catch(error => {
-    //             console.log(error);
-    //             setState({ ...state, buttonText: 'Register', error: error.response.data.error });
-    //         });
-    // };
-
-    const registerForm = () => (
+    const updateForm = () => (
         <form onSubmit={handleSubmit}>
             <div className="form-group">
                 <input
@@ -143,6 +118,7 @@ const Register = () => {
                     className="form-control"
                     placeholder="Type your email"
                     required
+                    disabled
                 />
             </div>
             <div className="form-group">
@@ -152,7 +128,6 @@ const Register = () => {
                     type="password"
                     className="form-control"
                     placeholder="Type your password"
-                    required
                 />
             </div>
 
@@ -170,14 +145,14 @@ const Register = () => {
     return (
         <Layout>
             <div className="col-md-6 offset-md-3">
-                <h1>Register</h1>
+                <h1>Update Profile</h1>
                 <br />
                 {success && showSuccessMessage(success)}
                 {error && showErrorMessage(error)}
-                {registerForm()}
+                {updateForm()}
             </div>
         </Layout>
     );
 };
 
-export default Register;
+export default withUser(Profile);
