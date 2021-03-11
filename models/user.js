@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const crypto = require('crypto');
+const { ObjectId } = mongoose.Schema;
 
 const userSchema = new Schema(
 	{
@@ -39,6 +40,13 @@ const userSchema = new Schema(
 			data: String,
 			default: '',
 		},
+		categories: [
+			{
+				type: ObjectId,
+				ref: 'Category',
+				required: true,
+			},
+		],
 	},
 	{ timestamps: true }
 );
@@ -80,7 +88,6 @@ userSchema.methods = {
 		return Math.round(new Date().valueOf() * Math.random()) + '';
 	},
 };
-
 // export user model
 const User = mongoose.model('User', userSchema);
 module.exports = User;
