@@ -3,7 +3,6 @@ const router = express.Router();
 const Link = require('../../models/link');
 const User = require('../../models/user');
 const Category = require('../../models/category');
-// const slugify = require('slugify');
 const { linkPublishedParams } = require('../helpers/email');
 const AWS = require('aws-sdk');
 
