@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const { linkPublishedParams } = require('../helpers/email');
+const AWS = require('aws-sdk');
+
+// import models
 const Link = require('../../models/link');
 const User = require('../../models/user');
 const Category = require('../../models/category');
-const { linkPublishedParams } = require('../helpers/email');
-const AWS = require('aws-sdk');
 
 // import validators
 const {
