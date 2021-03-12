@@ -28,10 +28,10 @@ const s3 = new AWS.S3({
 });
 
 //@route    POST api/category
-//@desc     post create catagort
+//@desc     create catagory
 //@access   Admin
 router.post(
-	'/category',
+	'/',
 	categoryCreateValidator,
 	runValidation,
 	requireSignin,
@@ -40,100 +40,115 @@ router.post(
 		const { name, image, content } = req.body;
 		// console.log({ name, image, content });
 		// image data
-		const base64Data = new Buffer.from(
-			image.replace(/^data:image\/\w+;base64,/, ''),
-			'base64'
-		);
-		const type = image.split(';')[0].split('/')[1];
+		try {
+			const base64Data = new Buffer.from(
+				image.replace(/^data:image\/\w+;base64,/, ''),
+				'base64'
+			);
+			const type = image.split(';')[0].split('/')[1];
 
-		const slug = slugify(name);
-		let category = new Category({ name, content, slug });
+			const slug = slugify(name);
+			let category = new Category({ name, content, slug });
 
-		const params = {
-			Bucket: 'hackr-kaloraat',
-			Key: `category/${uuidv4()}.${type}`,
-			Body: base64Data,
-			ACL: 'public-read',
-			ContentEncoding: 'base64',
-			ContentType: `image/${type}`,
-		};
+			const params = {
+				Bucket: 'hackr-kaloraat',
+				Key: `category/${uuidv4()}.${type}`,
+				Body: base64Data,
+				ACL: 'public-read',
+				ContentEncoding: 'base64',
+				ContentType: `image/${type}`,
+			};
 
-		s3.upload(params, (err, data) => {
-			if (err) {
-				console.log(err);
-				res.status(400).json({ error: 'Upload to s3 failed' });
-			}
-			console.log('AWS UPLOAD RES DATA', data);
-			category.image.url = data.Location;
-			category.image.key = data.Key;
-			// posted by
-			category.postedBy = req.user._id;
-
-			// save to db
-			category.save((err, success) => {
+			s3.upload(params, (err, data) => {
 				if (err) {
 					console.log(err);
-					res.status(400).json({ error: 'Duplicate category' });
+					res.status(400).json({ error: 'Upload to s3 failed' });
 				}
-				return res.json(success);
+				console.log('AWS UPLOAD RES DATA', data);
+				category.image.url = data.Location;
+				category.image.key = data.Key;
+				// posted by
+				category.postedBy = req.user._id;
+
+				// save to db
+				category.save((err, success) => {
+					if (err) {
+						console.log(err);
+						res.status(400).json({ error: 'Duplicate category' });
+					}
+					return res.json(success);
+				});
 			});
-		});
+		} catch (err) {
+			console.error(err.message);
+			return res.status(500).send('Server Error');
+		}
 	}
 );
 
-//@route    GET api/categories
-//@desc     get list ************************************
+//@route    GET api/category/categories
+//@desc     get category list
 //@access   Public
 router.get('/categories', async (req, res) => {
-	Category.find({}).exec((err, data) => {
-		if (err) {
-			return res.status(400).json({
-				error: 'Categories could not load',
-			});
-		}
-		res.json(data);
-	});
+	try {
+		Category.find({}).exec((err, data) => {
+			if (err) {
+				return res.status(400).json({
+					error: 'Categories could not load',
+				});
+			}
+			res.json(data);
+		});
+	} catch (err) {
+		console.error(err.message);
+		return res.status(500).send('Server Error');
+	}
 });
 
 //@route    POST api/category/:slug
-//@desc     post ***************************************
+//@desc     post category list
 //@access   Public
-router.post('/category/:slug', async (req, res) => {
+router.post('/:slug', async (req, res) => {
 	const { slug } = req.params;
 	let limit = req.body.limit ? parseInt(req.body.limit) : 10;
 	let skip = req.body.skip ? parseInt(req.body.skip) : 0;
 
-	Category.findOne({ slug })
-		.populate('postedBy', '_id name username')
-		.exec((err, category) => {
-			if (err) {
-				return res.status(400).json({
-					error: 'Could not load category',
-				});
-			}
-			// res.json(category);
-			Link.find({ categories: category })
-				.populate('postedBy', '_id name username')
-				.populate('categories', 'name')
-				.sort({ createdAt: -1 })
-				.limit(limit)
-				.skip(skip)
-				.exec((err, links) => {
-					if (err) {
-						return res.status(400).json({
-							error: 'Could not load links of a category',
-						});
-					}
-					res.json({ category, links });
-				});
-		});
+	try {
+		Category.findOne({ slug })
+			.populate('postedBy', '_id name username')
+			.exec((err, category) => {
+				if (err) {
+					return res.status(400).json({
+						error: 'Could not load category',
+					});
+				}
+				// res.json(category);
+				Link.find({ categories: category })
+					.populate('postedBy', '_id name username')
+					.populate('categories', 'name')
+					.sort({ createdAt: -1 })
+					.limit(limit)
+					.skip(skip)
+					.exec((err, links) => {
+						if (err) {
+							return res.status(400).json({
+								error: 'Could not load links of a category',
+							});
+						}
+						res.json({ category, links });
+					});
+			});
+	} catch (err) {
+		console.error(err.message);
+		return res.status(500).send('Server Error');
+	}
 });
 
 //@route    Put api/category/:slug
-//@desc     put admin ********************************************
+//@desc     put admin catigory
 //@access   Admin
 router.put(
-	'/category/:slug',
+	'/:slug',
 	categoryUpdateValidator,
 	runValidation,
 	requireSignin,
@@ -142,15 +157,19 @@ router.put(
 		const { slug } = req.params;
 		const { name, image, content } = req.body;
 
-		// image data
-		const base64Data = new Buffer.from(
-			image.replace(/^data:image\/\w+;base64,/, ''),
-			'base64'
-		);
-		const type = image.split(';')[0].split('/')[1];
+		try {
+			// image data
+			const base64Data = new Buffer.from(
+				image.replace(/^data:image\/\w+;base64,/, ''),
+				'base64'
+			);
+			const type = image.split(';')[0].split('/')[1];
 
-		Category.findOneAndUpdate({ slug }, { name, content }, { new: true }).exec(
-			(err, updated) => {
+			Category.findOneAndUpdate(
+				{ slug },
+				{ name, content },
+				{ new: true }
+			).exec((err, updated) => {
 				if (err) {
 					return res.status(400).json({
 						error: 'Could not find category to update',
@@ -200,21 +219,20 @@ router.put(
 				} else {
 					res.json(updated);
 				}
-			}
-		);
+			});
+		} catch (err) {
+			console.error(err.message);
+			return res.status(500).send('Server Error');
+		}
 	}
 );
 
 //@route    DELETE api/category/:slug
-//@desc     delete admin *********************************
+//@desc     delete admin
 //@access   Admin
-router.delete(
-	'/category/:slug',
-	requireSignin,
-	adminMiddleware,
-	async (req, res) => {
-		const { slug } = req.params;
-
+router.delete('/:slug', requireSignin, adminMiddleware, async (req, res) => {
+	const { slug } = req.params;
+	try {
 		Category.findOneAndRemove({ slug }).exec((err, data) => {
 			if (err) {
 				return res.status(400).json({
@@ -236,7 +254,10 @@ router.delete(
 				message: 'Category deleted successfully',
 			});
 		});
+	} catch (err) {
+		console.error(err.message);
+		return res.status(500).send('Server Error');
 	}
-);
+});
 
 module.exports = router;

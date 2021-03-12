@@ -18,8 +18,8 @@ const {
 
 //@route    GET api/user
 //@desc     get user
-//@access   Public
-router.get('/user', requireSignin, authMiddleware, async (req, res) => {
+//@access   Private
+router.get('/', requireSignin, authMiddleware, async (req, res) => {
 	try {
 		User.findOne({ _id: req.user._id }).exec((err, user) => {
 			if (err) {
@@ -48,8 +48,8 @@ router.get('/user', requireSignin, authMiddleware, async (req, res) => {
 	}
 });
 
-//@route    GET api/user
-//@desc     get admin
+//@route    GET api/user/admin
+//@desc     get admin user
 //@access   Admin
 router.get('/admin', requireSignin, adminMiddleware, async (req, res) => {
 	try {
@@ -80,11 +80,11 @@ router.get('/admin', requireSignin, adminMiddleware, async (req, res) => {
 	}
 });
 
-//@route    POST api/user
+//@route    PUT api/user
 //@desc     update user
-//@access   Public
+//@access   Private
 router.put(
-	'/user',
+	'/',
 	userUpdateValidator,
 	requireSignin,
 	authMiddleware,

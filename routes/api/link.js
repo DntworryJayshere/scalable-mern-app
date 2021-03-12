@@ -35,7 +35,7 @@ const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 //@desc     Post to create Link
 //@access   Public
 router.post(
-	'/link',
+	'/',
 	linkCreateValidator,
 	runValidation,
 	requireSignin,
@@ -44,109 +44,128 @@ router.post(
 		const { title, url, categories, type, medium } = req.body;
 		// console.table({ title, url, categories, type, medium });
 		const slug = url;
-		let link = new Link({ title, url, categories, type, medium, slug });
-		// posted by user
-		link.postedBy = req.user._id;
-		// save link
-		link.save((err, data) => {
-			if (err) {
-				return res.status(400).json({
-					error: 'Link already exist',
-				});
-			}
-			res.json(data);
-			// find all users in the category
-			User.find({ categories: { $in: categories } }).exec((err, users) => {
+		try {
+			let link = new Link({ title, url, categories, type, medium, slug });
+			// posted by user
+			link.postedBy = req.user._id;
+			// save link
+			link.save((err, data) => {
 				if (err) {
-					throw new Error(err);
-					console.log('Error finding users to send email on link publish');
+					return res.status(400).json({
+						error: 'Link already exist',
+					});
 				}
-				Category.find({ _id: { $in: categories } }).exec((err, result) => {
-					data.categories = result;
-
-					for (let i = 0; i < users.length; i++) {
-						const params = linkPublishedParams(users[i].email, data);
-						const sendEmail = ses.sendEmail(params).promise();
-
-						sendEmail
-							.then((success) => {
-								console.log('email submitted to SES ', success);
-								return;
-							})
-							.catch((failure) => {
-								console.log('error on email submitted to SES  ', failure);
-								return;
-							});
+				res.json(data);
+				// find all users in the category
+				User.find({ categories: { $in: categories } }).exec((err, users) => {
+					if (err) {
+						throw new Error(err);
+						console.log('Error finding users to send email on link publish');
 					}
+					Category.find({ _id: { $in: categories } }).exec((err, result) => {
+						data.categories = result;
+
+						for (let i = 0; i < users.length; i++) {
+							const params = linkPublishedParams(users[i].email, data);
+							const sendEmail = ses.sendEmail(params).promise();
+
+							sendEmail
+								.then((success) => {
+									console.log('email submitted to SES ', success);
+									return;
+								})
+								.catch((failure) => {
+									console.log('error on email submitted to SES  ', failure);
+									return;
+								});
+						}
+					});
 				});
 			});
-		});
+		} catch (err) {
+			console.error(err.message);
+			return res.status(500).send('Server Error');
+		}
 	}
 );
 
-//@route    POST api/links
+//@route    POST api/link/links
 //@desc     Post to create Links
 //@access   Public
 router.post('/links', requireSignin, adminMiddleware, async (req, res) => {
 	let limit = req.body.limit ? parseInt(req.body.limit) : 10;
 	let skip = req.body.skip ? parseInt(req.body.skip) : 0;
+	try {
+		Link.find({})
+			.populate('postedBy', 'name')
+			.populate('categories', 'name slug')
+			.sort({ createdAt: -1 })
+			.skip(skip)
+			.limit(limit)
+			.exec((err, data) => {
+				if (err) {
+					return res.status(400).json({
+						error: 'Could not list links',
+					});
+				}
+				res.json(data);
+			});
+	} catch (err) {
+		console.error(err.message);
+		return res.status(500).send('Server Error');
+	}
+});
 
-	Link.find({})
-		.populate('postedBy', 'name')
-		.populate('categories', 'name slug')
-		.sort({ createdAt: -1 })
-		.skip(skip)
-		.limit(limit)
-		.exec((err, data) => {
+//@route    PUT api/link/click-count
+//@desc     Put to update Link click count
+//@access   Public
+router.put('/click-count', async (req, res) => {
+	const { linkId } = req.body;
+	try {
+		Link.findByIdAndUpdate(
+			linkId,
+			{ $inc: { clicks: 1 } },
+			{ upsert: true, new: true }
+		).exec((err, result) => {
+			if (err) {
+				console.log(err);
+				return res.status(400).json({
+					error: 'Could not update view count',
+				});
+			}
+			res.json(result);
+		});
+	} catch (err) {
+		console.error(err.message);
+		return res.status(500).send('Server Error');
+	}
+});
+
+//@route    GET api/link/:id
+//@desc     get Link by id
+//@access   Public
+router.get('/:id', async (req, res) => {
+	const { id } = req.params;
+	try {
+		Link.findOne({ _id: id }).exec((err, data) => {
 			if (err) {
 				return res.status(400).json({
-					error: 'Could not list links',
+					error: 'Error finding link',
 				});
 			}
 			res.json(data);
 		});
+	} catch (err) {
+		console.error(err.message);
+		return res.status(500).send('Server Error');
+	}
 });
 
-//@route    POST api/link
-//@desc     Post to create Link
-//@access   Public
-router.put('/click-count', async (req, res) => {
-	const { linkId } = req.body;
-	Link.findByIdAndUpdate(
-		linkId,
-		{ $inc: { clicks: 1 } },
-		{ upsert: true, new: true }
-	).exec((err, result) => {
-		if (err) {
-			console.log(err);
-			return res.status(400).json({
-				error: 'Could not update view count',
-			});
-		}
-		res.json(result);
-	});
-});
-
-//@route    POST api/link
-//@desc     Post to create Link
-//@access   Public
-router.get('/link/:id', async (req, res) => {
-	const { id } = req.params;
-	Link.findOne({ _id: id }).exec((err, data) => {
-		if (err) {
-			return res.status(400).json({
-				error: 'Error finding link',
-			});
-		}
-		res.json(data);
-	});
-});
-
-//@route    POST api/link
-//@desc     Post to create Link
+//@route    PUT api/link/:id
+//@desc     put to update link by id
 //@access   Public
 router.put(
-	'/link/:id',
+	'/:id',
 	linkUpdateValidator,
 	runValidation,
 	requireSignin,
@@ -156,25 +175,29 @@ router.put(
 		const { id } = req.params;
 		const { title, url, categories, type, medium } = req.body;
 		const updatedLink = { title, url, categories, type, medium };
-
-		Link.findOneAndUpdate({ _id: id }, updatedLink, { new: true }).exec(
-			(err, updated) => {
-				if (err) {
-					return res.status(400).json({
-						error: 'Error updating the link',
-					});
+		try {
+			Link.findOneAndUpdate({ _id: id }, updatedLink, { new: true }).exec(
+				(err, updated) => {
+					if (err) {
+						return res.status(400).json({
+							error: 'Error updating the link',
+						});
+					}
+					res.json(updated);
 				}
-				res.json(updated);
-			}
-		);
+			);
+		} catch (err) {
+			console.error(err.message);
+			return res.status(500).send('Server Error');
+		}
 	}
 );
 
-//@route    POST api/link
-//@desc     Post to create Link
+//@route    PUT api/link/admin/:id
+//@desc     put for admin to update Link
 //@access   Public
 router.put(
-	'/link/admin/:id',
+	'/admin/:id',
 	linkUpdateValidator,
 	runValidation,
 	requireSignin,
@@ -183,62 +206,76 @@ router.put(
 		const { id } = req.params;
 		const { title, url, categories, type, medium } = req.body;
 		const updatedLink = { title, url, categories, type, medium };
-
-		Link.findOneAndUpdate({ _id: id }, updatedLink, { new: true }).exec(
-			(err, updated) => {
-				if (err) {
-					return res.status(400).json({
-						error: 'Error updating the link',
-					});
+		try {
+			Link.findOneAndUpdate({ _id: id }, updatedLink, { new: true }).exec(
+				(err, updated) => {
+					if (err) {
+						return res.status(400).json({
+							error: 'Error updating the link',
+						});
+					}
+					res.json(updated);
 				}
-				res.json(updated);
-			}
-		);
+			);
+		} catch (err) {
+			console.error(err.message);
+			return res.status(500).send('Server Error');
+		}
 	}
 );
 
-//@route    POST api/link
-//@desc     Post to create Link
+//@route    DELETE api/link/:id
+//@desc     delete Link by id
 //@access   Public
 router.delete(
-	'/link/:id',
+	'/:id',
 	requireSignin,
 	authMiddleware,
 	canUpdateDeleteLink,
 	async (req, res) => {
 		const { id } = req.params;
-		Link.findOneAndRemove({ _id: id }).exec((err, data) => {
-			if (err) {
-				return res.status(400).json({
-					error: 'Error removing the link',
+		try {
+			Link.findOneAndRemove({ _id: id }).exec((err, data) => {
+				if (err) {
+					return res.status(400).json({
+						error: 'Error removing the link',
+					});
+				}
+				res.json({
+					message: 'Link removed successfully',
 				});
-			}
-			res.json({
-				message: 'Link removed successfully',
 			});
-		});
+		} catch (err) {
+			console.error(err.message);
+			return res.status(500).send('Server Error');
+		}
 	}
 );
 
-//@route    POST api/link
-//@desc     Post to create Link
+//@route    DELETE api/link/admin/:id
+//@desc     delete link by admin
 //@access   Public
 router.delete(
-	'/link/admin/:id',
+	'/admin/:id',
 	requireSignin,
 	adminMiddleware,
 	async (req, res) => {
 		const { id } = req.params;
-		Link.findOneAndRemove({ _id: id }).exec((err, data) => {
-			if (err) {
-				return res.status(400).json({
-					error: 'Error removing the link',
+		try {
+			Link.findOneAndRemove({ _id: id }).exec((err, data) => {
+				if (err) {
+					return res.status(400).json({
+						error: 'Error removing the link',
+					});
+				}
+				res.json({
+					message: 'Link removed successfully',
 				});
-			}
-			res.json({
-				message: 'Link removed successfully',
 			});
-		});
+		} catch (err) {
+			console.error(err.message);
+			return res.status(500).send('Server Error');
+		}
 	}
 );
 

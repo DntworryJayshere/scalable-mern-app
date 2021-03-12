@@ -33,7 +33,7 @@ AWS.config.update({
 });
 const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 
-//@route    POST api/register
+//@route    POST api/auth/register
 //@desc     begin to register user through SES
 //@access   Public
 router.post(
@@ -85,7 +85,7 @@ router.post(
 	}
 );
 
-//@route    POST api/register/activate
+//@route    POST  api/auth/register/activate
 //@desc     activate a registered user
 //@access   Public
 router.post('/register/activate', async (req, res) => {
@@ -139,7 +139,7 @@ router.post('/register/activate', async (req, res) => {
 	);
 });
 
-//@route    POST api/login
+//@route    POST  api/auth/login
 //@desc     login user
 //@access   Public
 router.post('/login', userLoginValidator, runValidation, async (req, res) => {
@@ -175,7 +175,7 @@ router.post('/login', userLoginValidator, runValidation, async (req, res) => {
 	}
 });
 
-//@route    PUT api/forgot-password
+//@route    PUT  api/auth/forgot-password
 //@desc     send email to reset forgotten password
 //@access   Public
 router.put(
@@ -231,8 +231,8 @@ router.put(
 	}
 );
 
-//@route    PUT api/reset-password
-//@desc     reset password
+//@route    PUT  api/auth/reset-password
+//@desc     reset forgotten password
 //@access   Public
 router.put(
 	'/reset-password',
