@@ -1,15 +1,15 @@
 const express = require('express');
 const router = express.Router();
 
-// validators
+// import validators
 const {
 	categoryCreateValidator,
 	categoryUpdateValidator,
-} = require('../validators/category');
-const { runValidation } = require('../validators');
+} = require('../../validators/category');
+const { runValidation } = require('../../validators');
 
-// controllers
-const { requireSignin, adminMiddleware } = require('../controllers/auth');
+// import middleware
+const { requireSignin, adminMiddleware } = require('../../middleware/auth');
 const {
 	create,
 	list,

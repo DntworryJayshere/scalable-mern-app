@@ -21,4 +21,4 @@ app.use(routes);
 // db
 connectDB();
 
-app.listen(port, () => console.log(`API is running on port ${port}`));
+app.listen(PORT, () => console.log('Server started on port' + PORT));
