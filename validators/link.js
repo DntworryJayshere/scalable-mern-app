@@ -1,17 +1,17 @@
 const { check } = require('express-validator');
 
 exports.linkCreateValidator = [
-	check('title').not().isEmpty().withMessage('Title is required'),
-	check('url').not().isEmpty().withMessage('URL is required'),
-	check('categories').not().isEmpty().withMessage('Pick a category'),
-	check('type').not().isEmpty().withMessage('Pick a type free/paid'),
-	check('medium').not().isEmpty().withMessage('Pick a medium video/book'),
+	check('title', 'Title is required').not().isEmpty(),
+	check('url', 'URL is required').not().isEmpty(),
+	check('categories', 'Pick a category').not().isEmpty(),
+	check('type', 'Pick a type free/paid').not().isEmpty(),
+	check('medium', 'Pick a medium video/book').not().isEmpty(),
 ];
 
 exports.linkUpdateValidator = [
-	check('title').not().isEmpty().withMessage('Title is required'),
-	check('url').not().isEmpty().withMessage('URL is required'),
-	check('categories').not().isEmpty().withMessage('Pick a category'),
-	check('type').not().isEmpty().withMessage('Pick a type free/paid'),
-	check('medium').not().isEmpty().withMessage('Pick a medium video/book'),
+	check('title', 'Title is required').not().isEmpty(),
+	check('url', 'URL is required').not().isEmpty(),
+	check('categories', 'Pick a category').not().isEmpty(),
+	check('type', 'Pick a type free/paid').not().isEmpty(),
+	check('medium', 'Pick a medium video/book').not().isEmpty(),
 ];
