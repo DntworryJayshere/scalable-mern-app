@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { linkPublishedParams } = require('../helpers/email');
+const { linkPublishedParams } = require('../../helpers/email');
 const AWS = require('aws-sdk');
 
 // import models

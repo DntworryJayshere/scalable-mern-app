@@ -2,7 +2,7 @@ const withCSS = require('@zeit/next-css');
 module.exports = withCSS({
 	publicRuntimeConfig: {
 		APP_NAME: 'scalable-mern-app',
-		API: 'http://localhost:8000/api',
+		API: 'http://localhost:8000/',
 		PRODUCTION: false,
 		DOMAIN: 'http://localhost:3000',
 	},

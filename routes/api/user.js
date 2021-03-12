@@ -6,11 +6,15 @@ const User = require('../../models/user');
 const Link = require('../../models/link');
 
 // import validator
-const { userUpdateValidator } = require('../validators/auth');
-const { runValidation } = require('../validators');
+const { userUpdateValidator } = require('../../validators/auth');
+const { runValidation } = require('../../validators');
 
 // import middleware
-const { authMiddleware, adminMiddleware } = require('../../middleware/auth');
+const {
+	requireSignin,
+	authMiddleware,
+	adminMiddleware,
+} = require('../../middleware/auth');
 
 //@route    GET api/user
 //@desc     get user
