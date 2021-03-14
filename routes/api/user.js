@@ -90,7 +90,7 @@ router.put(
 	authMiddleware,
 	runValidation,
 	async (req, res) => {
-		const { name, password, categories } = req.body;
+		const { name, password } = req.body;
 		try {
 			switch (true) {
 				case password && password.length < 6:
@@ -102,7 +102,7 @@ router.put(
 
 			User.findOneAndUpdate(
 				{ _id: req.user._id },
-				{ name, password, categories },
+				{ name, password },
 				{ new: true }
 			).exec((err, updated) => {
 				if (err) {

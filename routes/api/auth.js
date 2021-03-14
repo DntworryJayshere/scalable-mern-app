@@ -190,6 +190,7 @@ router.put(
 		try {
 			User.findOne({ email }).exec((err, user) => {
 				if (err || !user) {
+					console.log(err);
 					return res.status(400).json({
 						error: 'User with that email does not exist',
 					});
@@ -198,33 +199,36 @@ router.put(
 				const token = jwt.sign(
 					{ name: user.name },
 					process.env.JWT_RESET_PASSWORD,
-					{ expiresIn: '10m' }
+					{ expiresIn: '10d' }
 				);
 				// send email
 				const params = forgotPasswordEmailParams(email, token);
 
 				// populate the db > user > resetPasswordLink
-				return user.updateOne({ resetPasswordLink: token }, (err, success) => {
-					if (err) {
-						return res.status(400).json({
-							error: 'Password reset failed. Try later.',
-						});
+				return User.findOneAndUpdate(
+					{ resetPasswordLink: token },
+					(err, success) => {
+						if (err) {
+							return res.status(400).json({
+								error: 'Password reset failed. Try later.',
+							});
+						}
+						const sendEmail = ses.sendEmail(params).promise();
+						sendEmail
+							.then((data) => {
+								console.log('ses reset pw success', data);
+								return res.json({
+									message: `Email has been sent to ${email}. Click on the link to reset your password`,
+								});
+							})
+							.catch((error) => {
+								console.log('ses reset pw failed', error);
+								return res.json({
+									message: `We could not vefiry your email. Try later.`,
+								});
+							});
 					}
-					const sendEmail = ses.sendEmail(params).promise();
-					sendEmail
-						.then((data) => {
-							console.log('ses reset pw success', data);
-							return res.json({
-								message: `Email has been sent to ${email}. Click on the link to reset your password`,
-							});
-						})
-						.catch((error) => {
-							console.log('ses reset pw failed', error);
-							return res.json({
-								message: `We could not vefiry your email. Try later.`,
-							});
-						});
-				});
+				);
 			});
 		} catch (err) {
 			console.error(err.message);

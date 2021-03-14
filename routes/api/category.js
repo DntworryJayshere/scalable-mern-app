@@ -28,7 +28,7 @@ const s3 = new AWS.S3({
 });
 
 //@route    POST api/category
-//@desc     create catagory
+//@desc     create catagory item
 //@access   Admin
 router.post(
 	'/',
