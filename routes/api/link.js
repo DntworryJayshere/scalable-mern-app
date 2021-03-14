@@ -60,7 +60,6 @@ router.post(
 				User.find({ categories: { $in: categories } }).exec((err, users) => {
 					if (err) {
 						throw new Error(err);
-						console.log('Error finding users to send email on link publish');
 					}
 					Category.find({ _id: { $in: categories } }).exec((err, result) => {
 						data.categories = result;

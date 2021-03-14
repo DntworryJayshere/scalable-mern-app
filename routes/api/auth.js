@@ -34,28 +34,29 @@ AWS.config.update({
 const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 
 //@route    POST api/auth/register
-//@desc     begin to register user through SES
+//@desc     *Complete&Tested begin to register user through SES
 //@access   Public
 router.post(
 	'/register',
 	userRegisterValidator,
 	runValidation,
 	async (req, res) => {
-		const { name, email, password, categories } = req.body;
+		const { name, email, password } = req.body;
 		// check if user exists in our db
 		try {
 			User.findOne({ email }).exec((err, user) => {
 				if (user) {
+					console.log(err);
 					return res.status(400).json({
 						error: 'Email is taken',
 					});
 				}
 				// generate token with user name email and password
 				const token = jwt.sign(
-					{ name, email, password, categories },
+					{ name, email, password },
 					process.env.JWT_ACCOUNT_ACTIVATION,
 					{
-						expiresIn: '10m',
+						expiresIn: '10d',
 					}
 				);
 
@@ -86,7 +87,7 @@ router.post(
 );
 
 //@route    POST  api/auth/register/activate
-//@desc     activate a registered user
+//@desc     *Complete&Tested activate a registered user
 //@access   Public
 router.post('/register/activate', async (req, res) => {
 	const { token } = req.body;
@@ -95,20 +96,21 @@ router.post('/register/activate', async (req, res) => {
 		token,
 		process.env.JWT_ACCOUNT_ACTIVATION,
 		function (err, decoded) {
+			console.log(err);
 			if (err) {
 				return res.status(401).json({
 					error: 'Expired link. Try again',
 				});
 			}
 
-			const { name, email, password, categories } = jwt.decode(token);
+			const { name, email, password } = jwt.decode(token);
 			const username = shortId.generate();
 
 			try {
 				User.findOne({ email }).exec((err, user) => {
 					if (user) {
 						return res.status(401).json({
-							error: 'Email is taken',
+							error: 'Email is taken - sent from Registration Link',
 						});
 					}
 
@@ -118,12 +120,12 @@ router.post('/register/activate', async (req, res) => {
 						name,
 						email,
 						password,
-						categories,
 					});
 					newUser.save((err, result) => {
 						if (err) {
+							console.log(err);
 							return res.status(401).json({
-								error: 'Error saving user in database. Try later',
+								error: 'Error saving user in database. Try again later',
 							});
 						}
 						return res.json({
@@ -140,7 +142,7 @@ router.post('/register/activate', async (req, res) => {
 });
 
 //@route    POST  api/auth/login
-//@desc     login user
+//@desc     *Complete&Tested login user
 //@access   Public
 router.post('/login', userLoginValidator, runValidation, async (req, res) => {
 	const { email, password } = req.body;
