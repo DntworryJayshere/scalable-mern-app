@@ -88,7 +88,7 @@ router.post(
 );
 
 //@route    GET api/category/categories
-//@desc     get all the categories - category list
+//@desc     *Complete&Tested get all the categories - category list
 //@access   Public
 router.get('/categories', async (req, res) => {
 	try {

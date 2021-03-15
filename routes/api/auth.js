@@ -41,7 +41,7 @@ router.post(
 	userRegisterValidator,
 	runValidation,
 	async (req, res) => {
-		const { name, email, password } = req.body;
+		const { name, email, password, categories } = req.body;
 		// check if user exists in our db
 		try {
 			User.findOne({ email }).exec((err, user) => {
@@ -53,7 +53,7 @@ router.post(
 				}
 				// generate token with user name email and password
 				const token = jwt.sign(
-					{ name, email, password },
+					{ name, email, password, categories },
 					process.env.JWT_ACCOUNT_ACTIVATION,
 					{
 						expiresIn: '10d',
@@ -103,7 +103,7 @@ router.post('/register/activate', async (req, res) => {
 				});
 			}
 
-			const { name, email, password } = jwt.decode(token);
+			const { name, email, password, categories } = jwt.decode(token);
 			const username = shortId.generate();
 
 			try {
@@ -120,6 +120,7 @@ router.post('/register/activate', async (req, res) => {
 						name,
 						email,
 						password,
+						categories,
 					});
 					newUser.save((err, result) => {
 						if (err) {
@@ -190,7 +191,6 @@ router.put(
 		try {
 			User.findOne({ email }).exec((err, user) => {
 				if (err || !user) {
-					console.log(err);
 					return res.status(400).json({
 						error: 'User with that email does not exist',
 					});
@@ -199,36 +199,33 @@ router.put(
 				const token = jwt.sign(
 					{ name: user.name },
 					process.env.JWT_RESET_PASSWORD,
-					{ expiresIn: '10d' }
+					{ expiresIn: '10m' }
 				);
 				// send email
 				const params = forgotPasswordEmailParams(email, token);
 
 				// populate the db > user > resetPasswordLink
-				return User.findOneAndUpdate(
-					{ resetPasswordLink: token },
-					(err, success) => {
-						if (err) {
-							return res.status(400).json({
-								error: 'Password reset failed. Try later.',
-							});
-						}
-						const sendEmail = ses.sendEmail(params).promise();
-						sendEmail
-							.then((data) => {
-								console.log('ses reset pw success', data);
-								return res.json({
-									message: `Email has been sent to ${email}. Click on the link to reset your password`,
-								});
-							})
-							.catch((error) => {
-								console.log('ses reset pw failed', error);
-								return res.json({
-									message: `We could not vefiry your email. Try later.`,
-								});
-							});
+				return user.updateOne({ resetPasswordLink: token }, (err, success) => {
+					if (err) {
+						return res.status(400).json({
+							error: 'Password reset failed. Try later.',
+						});
 					}
-				);
+					const sendEmail = ses.sendEmail(params).promise();
+					sendEmail
+						.then((data) => {
+							console.log('ses reset pw success', data);
+							return res.json({
+								message: `Email has been sent to ${email}. Click on the link to reset your password`,
+							});
+						})
+						.catch((error) => {
+							console.log('ses reset pw failed', error);
+							return res.json({
+								message: `We could not vefiry your email. Try later.`,
+							});
+						});
+				});
 			});
 		} catch (err) {
 			console.error(err.message);
@@ -246,20 +243,19 @@ router.put(
 	runValidation,
 	async (req, res) => {
 		const { resetPasswordLink, newPassword } = req.body;
-		if (resetPasswordLink) {
-			// check for expiry
-			jwt.verify(
-				resetPasswordLink,
-				process.env.JWT_RESET_PASSWORD,
-				(err, success) => {
-					-+989693;
-					if (err) {
-						return res.status(400).json({
-							error: 'Expired Link. Try again.',
-						});
-					}
+		try {
+			if (resetPasswordLink) {
+				// check for expiry
+				jwt.verify(
+					resetPasswordLink,
+					process.env.JWT_RESET_PASSWORD,
+					(err, success) => {
+						if (err) {
+							return res.status(400).json({
+								error: 'Expired Link. Try again.',
+							});
+						}
 
-					try {
 						User.findOne({ resetPasswordLink }).exec((err, user) => {
 							if (err || !user) {
 								return res.status(400).json({
@@ -286,12 +282,12 @@ router.put(
 								});
 							});
 						});
-					} catch (err) {
-						console.error(err.message);
-						return res.status(500).send('Server Error');
 					}
-				}
-			);
+				);
+			}
+		} catch (err) {
+			console.error(err.message);
+			return res.status(500).send('Server Error');
 		}
 	}
 );

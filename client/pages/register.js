@@ -8,9 +8,9 @@ import { isAuth } from '../helpers/auth';
 
 const Register = () => {
 	const [state, setState] = useState({
-		name: 'Jay',
-		email: 'Jay@gmail.com',
-		password: '123456',
+		name: '',
+		email: '',
+		password: '',
 		error: '',
 		success: '',
 		buttonText: 'Register',
@@ -39,7 +39,7 @@ const Register = () => {
 	}, []);
 
 	const loadCategories = async () => {
-		const response = await axios.get(`${API}/categories`);
+		const response = await axios.get(`${API}/category/categories`);
 		setState({ ...state, loadedCategories: response.data });
 	};
 
@@ -94,7 +94,7 @@ const Register = () => {
 		});
 		setState({ ...state, buttonText: 'Registering' });
 		try {
-			const response = await axios.post(`${API}/register`, {
+			const response = await axios.post(`${API}/auth/register`, {
 				name,
 				email,
 				password,

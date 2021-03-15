@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 8000;
 
 //init middleware
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json({ extended: false }));
+app.use(express.json({ limit: '5mb', extended: false }));
 app.use(morgan('dev'));
 app.use(routes);
 

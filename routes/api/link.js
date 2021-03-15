@@ -32,7 +32,7 @@ AWS.config.update({
 const ses = new AWS.SES({ apiVersion: '2010-12-01' });
 
 //@route    POST api/link
-//@desc     Post to create Link
+//@desc     *Complete&Tested Post to create Link
 //@access   Public
 router.post(
 	'/',
@@ -89,7 +89,7 @@ router.post(
 );
 
 //@route    POST api/link/links
-//@desc     Post to create Links
+//@desc     *Complete&Tested Post to create Links
 //@access   Public
 router.post('/links', requireSignin, adminMiddleware, async (req, res) => {
 	let limit = req.body.limit ? parseInt(req.body.limit) : 10;
