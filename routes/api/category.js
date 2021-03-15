@@ -5,6 +5,7 @@ const formidable = require('formidable');
 const uuidv4 = require('uuid/v4');
 const AWS = require('aws-sdk');
 const fs = require('fs');
+require('dotenv').config();
 
 // import models
 const Category = require('../../models/category');
@@ -28,7 +29,7 @@ const s3 = new AWS.S3({
 });
 
 //@route    POST api/category
-//@desc     create catagory item
+//@desc     *Complete&Tested (Image to fix in frontent) create a new catagory
 //@access   Admin
 router.post(
 	'/',
@@ -51,7 +52,7 @@ router.post(
 			let category = new Category({ name, content, slug });
 
 			const params = {
-				Bucket: 'hackr-kaloraat',
+				Bucket: `${process.env.AWS_BUCKET}`,
 				Key: `category/${uuidv4()}.${type}`,
 				Body: base64Data,
 				ACL: 'public-read',
@@ -87,7 +88,7 @@ router.post(
 );
 
 //@route    GET api/category/categories
-//@desc     get category list
+//@desc     get all the categories - category list
 //@access   Public
 router.get('/categories', async (req, res) => {
 	try {

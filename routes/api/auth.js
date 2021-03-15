@@ -252,6 +252,7 @@ router.put(
 				resetPasswordLink,
 				process.env.JWT_RESET_PASSWORD,
 				(err, success) => {
+					-+989693;
 					if (err) {
 						return res.status(400).json({
 							error: 'Expired Link. Try again.',
