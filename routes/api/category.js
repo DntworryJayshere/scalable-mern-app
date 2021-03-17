@@ -29,7 +29,7 @@ const s3 = new AWS.S3({
 });
 
 //@route    POST api/category
-//@desc     *Complete&Tested (Image to fix in frontent) create a new catagory
+//@desc     *Complete&Tested create a new catagory
 //@access   Admin
 router.post(
 	'/',
@@ -180,7 +180,7 @@ router.put(
 				if (image) {
 					// remove the existing image from s3 before uploading new/updated one
 					const deleteParams = {
-						Bucket: 'hackr-kaloraat',
+						Bucket: `${process.env.AWS_BUCKET}`,
 						Key: `${updated.image.key}`,
 					};
 
@@ -191,7 +191,7 @@ router.put(
 
 					// handle upload image
 					const params = {
-						Bucket: 'hackr-kaloraat',
+						Bucket: `${process.env.AWS_BUCKET}`,
 						Key: `category/${uuidv4()}.${type}`,
 						Body: base64Data,
 						ACL: 'public-read',
@@ -242,7 +242,7 @@ router.delete('/:slug', requireSignin, adminMiddleware, async (req, res) => {
 			}
 			// remove the existing image from s3 before uploading new/updated one
 			const deleteParams = {
-				Bucket: 'hackr-kaloraat',
+				Bucket: `${process.env.AWS_BUCKET}`,
 				Key: `${data.image.key}`,
 			};
 

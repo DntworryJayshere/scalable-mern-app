@@ -61,7 +61,7 @@ const Home = ({ categories }) => {
 
 	const listCategories = () =>
 		categories.map((c, i) => (
-			<Link key={i} href={`/link/links/${c.slug}`}>
+			<Link key={i} href={`/links/${c.slug}`}>
 				<a style={{ border: '1px solid' }} className="bg-light p-3 col-md-4">
 					<div>
 						<div className="row">
