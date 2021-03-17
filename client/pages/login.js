@@ -43,7 +43,7 @@ const Login = () => {
 			// console.log(response); // data > token / user
 			authenticate(response, () =>
 				isAuth() && isAuth().role === 'admin'
-					? Router.push('/admin')
+					? Router.push('/user/admin')
 					: Router.push('/user')
 			);
 		} catch (error) {

@@ -94,7 +94,7 @@ const Register = () => {
 		});
 		setState({ ...state, buttonText: 'Registering' });
 		try {
-			const response = await axios.post(`${API}/auth/register`, {
+			const response = await axios.post(`${API}/user/auth/register`, {
 				name,
 				email,
 				password,
