@@ -1,6 +1,5 @@
 import { useState, useEffect, Fragment } from 'react';
 import Layout from '../../components/Layout';
-import Link from 'next/link';
 import Head from 'next/head';
 import axios from 'axios';
 import renderHTML from 'react-render-html';
@@ -17,7 +16,7 @@ const Links = ({
 	linkSkip,
 }) => {
 	const [allLinks, setAllLinks] = useState(links);
-	const [limit, setLimit] = useState(linksLimit);
+	const [limit] = useState(linksLimit);
 	const [skip, setSkip] = useState(0);
 	const [size, setSize] = useState(totalLinks);
 	const [popular, setPopular] = useState([]);

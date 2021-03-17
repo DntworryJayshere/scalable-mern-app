@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import Layout from '../../../components/Layout';
-import Router from 'next/router';
 import axios from 'axios';
 import { showSuccessMessage, showErrorMessage } from '../../../helpers/alerts';
 import { API } from '../../../config';
-import { isAuth, updateUser } from '../../../helpers/auth';
+import { updateUser } from '../../../helpers/auth';
 import withUser from '../../withUser';
 
 const Profile = ({ user, token }) => {

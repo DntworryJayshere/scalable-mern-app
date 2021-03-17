@@ -90,7 +90,7 @@ router.post(
 
 //@route    POST api/link/links
 //@desc     *Complete&Tested Post to create Links
-//@access   Public
+//@access   ADMIN
 router.post('/links', requireSignin, adminMiddleware, async (req, res) => {
 	let limit = req.body.limit ? parseInt(req.body.limit) : 10;
 	let skip = req.body.skip ? parseInt(req.body.skip) : 0;
@@ -279,8 +279,8 @@ router.put(
 );
 
 //@route    DELETE api/link/:id
-//@desc     delete Link by id
-//@access   Public
+//@desc     *Complete&Tested  delete Link by id
+//@access   Private User
 router.delete(
 	'/:id',
 	requireSignin,

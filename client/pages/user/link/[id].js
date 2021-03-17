@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import Layout from '../../../components/Layout';
 import axios from 'axios';
 import withUser from '../../withUser';
-import { getCookie, isAuth } from '../../../helpers/auth';
+import { isAuth } from '../../../helpers/auth';
 import { API } from '../../../config';
 import { showSuccessMessage, showErrorMessage } from '../../../helpers/alerts';
 

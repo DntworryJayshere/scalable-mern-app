@@ -2,7 +2,6 @@ import { useState } from 'react';
 import Layout from '../../../components/Layout';
 import Link from 'next/link';
 import axios from 'axios';
-import renderHTML from 'react-render-html';
 import moment from 'moment';
 import { API } from '../../../config';
 import InfiniteScroll from 'react-infinite-scroller';
@@ -11,7 +10,7 @@ import { getCookie } from '../../../helpers/auth';
 
 const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
 	const [allLinks, setAllLinks] = useState(links);
-	const [limit, setLimit] = useState(linksLimit);
+	const [limit] = useState(linksLimit);
 	const [skip, setSkip] = useState(0);
 	const [size, setSize] = useState(totalLinks);
 
