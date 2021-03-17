@@ -116,7 +116,7 @@ router.post('/links', requireSignin, adminMiddleware, async (req, res) => {
 });
 
 //@route    PUT api/link/click-count
-//@desc     Put to update Link click count
+//@desc     *Complete&Tested  Put to update Link click count
 //@access   Public
 router.put('/click-count', async (req, res) => {
 	const { linkId } = req.body;
@@ -141,7 +141,7 @@ router.put('/click-count', async (req, res) => {
 });
 
 //@route    GET api/link/popular
-//@desc     get popular links
+//@desc     *Complete&Tested get popular links
 //@access   Public
 router.get('/popular', async (req, res) => {
 	try {
@@ -164,7 +164,7 @@ router.get('/popular', async (req, res) => {
 });
 
 //@route    GET api/link/popular/:slug
-//@desc     get popular link by slug
+//@desc     *Complete&Tested get popular link by slug
 //@access   Public
 router.get('/popular/:slug', async (req, res) => {
 	const { slug } = req.params;
@@ -196,7 +196,7 @@ router.get('/popular/:slug', async (req, res) => {
 });
 
 //@route    GET api/link/:id
-//@desc     get Link by id
+//@desc     *Complete&Tested get Link by id
 //@access   Public
 router.get('/:id', async (req, res) => {
 	const { id } = req.params;
@@ -216,7 +216,7 @@ router.get('/:id', async (req, res) => {
 });
 
 //@route    PUT api/link/:id
-//@desc     put to update link by id
+//@desc     *Complete&Tested put to update link by id
 //@access   Public
 router.put(
 	'/:id',

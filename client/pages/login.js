@@ -7,6 +7,8 @@ import { showSuccessMessage, showErrorMessage } from '../helpers/alerts';
 import { API } from '../config';
 import { authenticate, isAuth } from '../helpers/auth';
 
+//fully tested for unauthenticated user - login functional for admin and user
+
 const Login = () => {
 	const [state, setState] = useState({
 		email: '',
@@ -43,7 +45,7 @@ const Login = () => {
 			// console.log(response); // data > token / user
 			authenticate(response, () =>
 				isAuth() && isAuth().role === 'admin'
-					? Router.push('/user/admin')
+					? Router.push('/admin')
 					: Router.push('/user')
 			);
 		} catch (error) {

@@ -5,6 +5,8 @@ import moment from 'moment';
 import Link from 'next/link';
 import { API } from '../config';
 
+//fully tested (unauthenticated, authenticated user, authenticated admin)
+
 const Home = ({ categories }) => {
 	const [popular, setPopular] = useState([]);
 
