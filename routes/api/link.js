@@ -140,6 +140,61 @@ router.put('/click-count', async (req, res) => {
 	}
 });
 
+//@route    GET api/link/popular
+//@desc     get popular links
+//@access   Public
+router.get('/popular', async (req, res) => {
+	try {
+		Link.find()
+			.populate('postedBy', 'name')
+			.sort({ clicks: -1 })
+			.limit(3)
+			.exec((err, links) => {
+				if (err) {
+					return res.status(400).json({
+						error: 'Links not found',
+					});
+				}
+				res.json(links);
+			});
+	} catch (err) {
+		console.error(err.message);
+		return res.status(500).send('Server Error');
+	}
+});
+
+//@route    GET api/link/popular/:slug
+//@desc     get popular link by slug
+//@access   Public
+router.get('/popular/:slug', async (req, res) => {
+	const { slug } = req.params;
+	console.log(slug);
+	try {
+		Category.findOne({ slug }).exec((err, category) => {
+			if (err) {
+				return res.status(400).json({
+					error: 'Could not load categories',
+				});
+			}
+
+			Link.find({ categories: category })
+				.sort({ clicks: -1 })
+				.limit(3)
+				.exec((err, links) => {
+					if (err) {
+						return res.status(400).json({
+							error: 'Links not found',
+						});
+					}
+					res.json(links);
+				});
+		});
+	} catch (err) {
+		console.error(err.message);
+		return res.status(500).send('Server Error');
+	}
+});
+
 //@route    GET api/link/:id
 //@desc     get Link by id
 //@access   Public
