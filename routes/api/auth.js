@@ -40,18 +40,20 @@ router.post(
 	userRegisterValidator,
 	runValidation,
 	async (req, res) => {
-		const { name, email, password, categories } = req.body;
+		const { name, email, password } = req.body;
 		// check if user exists in our db
 		try {
 			User.findOne({ email }).exec((err, user) => {
 				if (user) {
 					console.log(err);
-					return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
+					return res
+						.status(400)
+						.json({ errors: [{ msg: 'User already exists' }] });
 				}
-				
+
 				// generate token with user name email and password
 				const token = jwt.sign(
-					{ name, email, password, categories },
+					{ name, email, password },
 					process.env.JWT_ACCOUNT_ACTIVATION,
 					{
 						expiresIn: '10d',
@@ -101,7 +103,7 @@ router.post('/register/activate', async (req, res) => {
 				});
 			}
 
-			const { name, email, password, categories } = jwt.decode(token);
+			const { name, email, password } = jwt.decode(token);
 			const username = shortId.generate();
 
 			try {
@@ -118,7 +120,6 @@ router.post('/register/activate', async (req, res) => {
 						name,
 						email,
 						password,
-						categories,
 					});
 					newUser.save((err, result) => {
 						if (err) {
