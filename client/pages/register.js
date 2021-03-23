@@ -6,6 +6,10 @@ import { showSuccessMessage, showErrorMessage } from '../helpers/alerts';
 import { API } from '../config';
 import { isAuth } from '../helpers/auth';
 
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+
 const Register = () => {
 	const [state, setState] = useState({
 		name: '',
@@ -13,7 +17,6 @@ const Register = () => {
 		password: '',
 		error: '',
 		success: '',
-		buttonText: 'Register',
 		loadedCategories: [],
 		categories: [],
 	});
@@ -24,7 +27,6 @@ const Register = () => {
 		password,
 		error,
 		success,
-		buttonText,
 		loadedCategories,
 		categories,
 	} = state;
@@ -74,25 +76,18 @@ const Register = () => {
 		);
 	};
 
-	const handleChange = (name) => (e) => {
-		setState({
-			...state,
-			[name]: e.target.value,
-			error: '',
-			success: '',
-			buttonText: 'Register',
-		});
-	};
+	const onChange = (e) =>
+		setState({ ...state, [e.target.name]: e.target.value });
 
-	const handleSubmit = async (e) => {
+	const onSubmit = async (e) => {
 		e.preventDefault();
+		setState({ ...state });
 		console.table({
 			name,
 			email,
 			password,
 			categories,
 		});
-		setState({ ...state, buttonText: 'Registering' });
 		try {
 			const response = await axios.post(`${API}/auth/register`, {
 				name,
@@ -106,74 +101,75 @@ const Register = () => {
 				name: '',
 				email: '',
 				password: '',
-				buttonText: 'Submitted',
 				success: response.data.message,
 			});
 		} catch (error) {
 			console.log(error);
 			setState({
 				...state,
-				buttonText: 'Register',
 				error: error.response.data.error,
 			});
 		}
 	};
 
 	const registerForm = () => (
-		<form onSubmit={handleSubmit}>
-			<div className="form-group">
-				<input
+		<Form onSubmit={onSubmit}>
+			<Form.group>
+				<Form.Label>Full Name</Form.Label>
+				<Form.Control
 					value={name}
-					onChange={handleChange('name')}
+					name="name"
+					onChange={onChange}
 					type="text"
-					className="form-control"
 					placeholder="enter your full name"
 					required
 				/>
-			</div>
-			<div className="form-group">
-				<input
+			</Form.group>
+			<Form.group>
+				<Form.Label>Email</Form.Label>
+				<Form.Control
 					value={email}
-					onChange={handleChange('email')}
-					type="email"
-					className="form-control"
+					name="email"
+					onChange={onChange}
+					type="text"
 					placeholder="enter your email"
 					required
 				/>
-			</div>
-			<div className="form-group">
-				<input
+			</Form.group>
+			<Form.group>
+				<Form.Label>Password</Form.Label>
+				<Form.Control
 					value={password}
-					onChange={handleChange('password')}
-					type="password"
-					className="form-control"
+					name="password"
+					onChange={onChange}
+					type="text"
 					placeholder="enter your password"
 					required
 				/>
-			</div>
-
-			<div className="form-group">
-				<label className="text-muted ml-4">Category</label>
+			</Form.group>
+			<Form.group>
+				<Form.Label>Category</Form.Label>
 				<ul style={{ maxHeight: '100px', overflowY: 'scroll' }}>
 					{showCategories()}
 				</ul>
-			</div>
-
-			<div className="form-group">
-				<button className="btn btn-outline-warning">{buttonText}</button>
-			</div>
-		</form>
+			</Form.group>
+			<Form.Group>
+				<Button className="btn" name="submit" type="submit" value="Register">
+					Register
+				</Button>
+			</Form.Group>
+		</Form>
 	);
 
 	return (
 		<Layout>
-			<div className="col-md-6 offset-md-3">
+			<Col className="offset-md-3">
 				<h1>Register</h1>
 				<br />
 				{success && showSuccessMessage(success)}
 				{error && showErrorMessage(error)}
 				{registerForm()}
-			</div>
+			</Col>
 		</Layout>
 	);
 };

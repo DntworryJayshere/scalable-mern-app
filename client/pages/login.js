@@ -20,11 +20,11 @@ const Login = () => {
 		success: '',
 	});
 
+	const { email, password, error, success } = state;
+
 	useEffect(() => {
 		isAuth() && Router.push('/');
 	}, []);
-
-	const { email, password, error, success } = state;
 
 	const onChange = (e) =>
 		setState({ ...state, [e.target.name]: e.target.value });
@@ -65,6 +65,7 @@ const Login = () => {
 					required
 				/>
 			</Form.Group>
+			<br />
 			<Form.Group>
 				<Form.Label>Password</Form.Label>
 				<Form.Control
@@ -76,6 +77,7 @@ const Login = () => {
 					required
 				/>
 			</Form.Group>
+			<br />
 			<Form.Group>
 				<Button className="btn" name="submit" type="submit" value="Login">
 					Login
@@ -92,6 +94,7 @@ const Login = () => {
 				{success && showSuccessMessage(success)}
 				{error && showErrorMessage(error)}
 				{loginForm()}
+				<br />
 				<Link href="/auth/password/forgot">
 					<a className="text-danger float-right">Forgot Password</a>
 				</Link>

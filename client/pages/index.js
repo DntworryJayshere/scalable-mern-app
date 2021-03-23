@@ -67,7 +67,7 @@ const Home = ({ categories }) => {
 
 	const listCategories = () =>
 		categories.map((c, i) => (
-			<Col md={4} style={{ padding: '1rem' }}>
+			<Col key={i} md={4} style={{ padding: '1rem' }}>
 				<Card style={{ flex: 1 }} key={i}>
 					<Card.Img
 						variant="top"
@@ -76,7 +76,7 @@ const Home = ({ categories }) => {
 						style={{ margin: 'auto', width: '100px', height: '100px' }}
 					/>
 					<Card.Body>
-						<Link key={i} href={`/links/${c.slug}`}>
+						<Link href={`/links/${c.slug}`}>
 							<Card.Title as="a">{c.name}</Card.Title>
 						</Link>
 						<Card.Text>
