@@ -7,6 +7,10 @@ import { showSuccessMessage, showErrorMessage } from '../helpers/alerts';
 import { API } from '../config';
 import { authenticate, isAuth } from '../helpers/auth';
 
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+
 //fully tested for unauthenticated user - login functional for admin and user
 const Login = () => {
 	const [state, setState] = useState({
@@ -14,28 +18,20 @@ const Login = () => {
 		password: '',
 		error: '',
 		success: '',
-		buttonText: 'Login',
 	});
 
 	useEffect(() => {
 		isAuth() && Router.push('/');
 	}, []);
 
-	const { email, password, error, success, buttonText } = state;
+	const { email, password, error, success } = state;
 
-	const handleChange = (name) => (e) => {
-		setState({
-			...state,
-			[name]: e.target.value,
-			error: '',
-			success: '',
-			buttonText: 'Login',
-		});
-	};
+	const onChange = (e) =>
+		setState({ ...state, [e.target.name]: e.target.value });
 
-	const handleSubmit = async (e) => {
+	const onSubmit = async (e) => {
 		e.preventDefault();
-		setState({ ...state, buttonText: 'Logging in' });
+		setState({ ...state });
 		try {
 			const response = await axios.post(`${API}/auth/login`, {
 				email,
@@ -51,43 +47,46 @@ const Login = () => {
 			console.log(error);
 			setState({
 				...state,
-				buttonText: 'Login',
 				error: error.response.data.error,
 			});
 		}
 	};
 
 	const loginForm = () => (
-		<form onSubmit={handleSubmit}>
-			<div className="form-group">
-				<input
+		<Form onSubmit={onSubmit}>
+			<Form.Group>
+				<Form.Label>Email Address</Form.Label>
+				<Form.Control
 					value={email}
-					onChange={handleChange('email')}
+					onChange={onChange}
 					type="email"
-					className="form-control"
-					placeholder="enter your email"
+					name="email"
+					placeholder="enter your email address..."
 					required
 				/>
-			</div>
-			<div className="form-group">
-				<input
+			</Form.Group>
+			<Form.Group>
+				<Form.Label>Password</Form.Label>
+				<Form.Control
 					value={password}
-					onChange={handleChange('password')}
+					onChange={onChange}
 					type="password"
-					className="form-control"
-					placeholder="enter your password"
+					name="password"
+					placeholder="enter your password..."
 					required
 				/>
-			</div>
-			<div className="form-group">
-				<button className="btn btn-outline-warning">{buttonText}</button>
-			</div>
-		</form>
+			</Form.Group>
+			<Form.Group>
+				<Button className="btn" name="submit" type="submit" value="Login">
+					Login
+				</Button>
+			</Form.Group>
+		</Form>
 	);
 
 	return (
 		<Layout>
-			<div className="col-md-6 offset-md-3">
+			<Col md={6} className="offset-md-3">
 				<h1>Login</h1>
 				<br />
 				{success && showSuccessMessage(success)}
@@ -96,7 +95,7 @@ const Login = () => {
 				<Link href="/auth/password/forgot">
 					<a className="text-danger float-right">Forgot Password</a>
 				</Link>
-			</div>
+			</Col>
 		</Layout>
 	);
 };

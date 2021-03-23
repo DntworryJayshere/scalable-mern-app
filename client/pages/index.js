@@ -68,7 +68,7 @@ const Home = ({ categories }) => {
 	const listCategories = () =>
 		categories.map((c, i) => (
 			<Col md={4} style={{ padding: '1rem' }}>
-				<Card style={{ flex: 1 }} key={i} href={`/links/${c.slug}`} passHref>
+				<Card style={{ flex: 1 }} key={i}>
 					<Card.Img
 						variant="top"
 						src={c.image && c.image.url}
