@@ -1,9 +1,15 @@
-import { useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import axios from 'axios';
 import moment from 'moment';
 import Link from 'next/link';
 import { API } from '../config';
+
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Card from 'react-bootstrap/Card';
+import CardGroup from 'react-bootstrap/CardGroup';
 
 //fully tested (unauthenticated, authenticated user, authenticated admin)
 
@@ -27,23 +33,23 @@ const Home = ({ categories }) => {
 
 	const listOfLinks = () =>
 		popular.map((l, i) => (
-			<div key={i} className="row alert alert-secondary p-2">
-				<div className="col-md-8" onClick={() => handleClick(l._id)}>
+			<Row key={i} className="alert alert-secondary p-2">
+				<Col md={8} onClick={() => handleClick(l._id)}>
 					<a href={l.url} target="_blank">
 						<h5 className="pt-2">{l.title}</h5>
 						<h6 className="pt-2 text-danger" style={{ fontSize: '12px' }}>
 							{l.url}
 						</h6>
 					</a>
-				</div>
+				</Col>
 
-				<div className="col-md-4 pt-2">
+				<Col md={4} className="pt-2">
 					<span className="pull-right">
 						{moment(l.createdAt).fromNow()} by {l.postedBy.name}
 					</span>
-				</div>
+				</Col>
 
-				<div className="col-md-12">
+				<Col md={12}>
 					<span className="badge text-dark">
 						{l.type} {l.medium}
 					</span>
@@ -55,48 +61,58 @@ const Home = ({ categories }) => {
 					<span className="badge text-secondary pull-right">
 						{l.clicks} clicks
 					</span>
-				</div>
-			</div>
+				</Col>
+			</Row>
 		));
 
 	const listCategories = () =>
 		categories.map((c, i) => (
-			<Link key={i} href={`/links/${c.slug}`}>
-				<a style={{ border: '1px solid' }} className="bg-light p-3 col-md-4">
-					<div>
-						<div className="row">
-							<div className="col-md-4">
-								<img
-									src={c.image && c.image.url}
-									alt={c.name}
-									style={{ width: '100px', height: 'auto' }}
-									className="pr-3"
-								/>
-							</div>
-							<div className="col-md-8">
-								<h3>{c.name}</h3>
-							</div>
-						</div>
-					</div>
-				</a>
-			</Link>
+			<Col md={4} style={{ padding: '1rem' }}>
+				<Card style={{ flex: 1 }} key={i} href={`/links/${c.slug}`} passHref>
+					<Card.Img
+						variant="top"
+						src={c.image && c.image.url}
+						alt={c.name}
+						style={{ margin: 'auto', width: '100px', height: '100px' }}
+					/>
+					<Card.Body>
+						<Link key={i} href={`/links/${c.slug}`}>
+							<Card.Title as="a">{c.name}</Card.Title>
+						</Link>
+						<Card.Text>
+							This is a wider card with supporting text below as a natural
+							lead-in to additional content. This content is a little bit
+							longer.
+						</Card.Text>
+					</Card.Body>
+					<Card.Footer>
+						<small className="text-muted">Last updated 3 mins ago</small>
+					</Card.Footer>
+				</Card>
+			</Col>
 		));
 
 	return (
 		<Layout>
-			<div className="row">
-				<div className="col-md-12">
-					<h1 className="font-weight-bold">Browse Tutorials/Courses</h1>
-					<br />
-				</div>
-			</div>
+			<Container>
+				<Row>
+					<Col md={12}>
+						<h1 className="font-weight-bold">Browse Categories</h1>
+						<br />
+					</Col>
+				</Row>
 
-			<div className="row">{listCategories()}</div>
+				<CardGroup style={{ display: 'flex' }}>{listCategories()}</CardGroup>
 
-			<div className="row pt-5">
-				<h2 className="font-weight-bold pb-3">Trending {popular.length}</h2>
-				{<div className="col-md-12 overflow-hidden">{listOfLinks()}</div>}
-			</div>
+				<Row>
+					<h2 className="font-weight-bold pb-3">Trending {popular.length}</h2>
+					{
+						<Col md={12} className="overflow-hidden">
+							{listOfLinks()}
+						</Col>
+					}
+				</Row>
+			</Container>
 		</Layout>
 	);
 };
