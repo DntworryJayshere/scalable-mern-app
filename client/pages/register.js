@@ -8,9 +8,9 @@ import { isAuth } from '../helpers/auth';
 
 const Register = () => {
 	const [state, setState] = useState({
-		name: 'Ryan',
-		email: 'ryan@gmail.com',
-		password: 'rrrrrr',
+		name: '',
+		email: '',
+		password: '',
 		error: '',
 		success: '',
 		buttonText: 'Register',
@@ -127,7 +127,7 @@ const Register = () => {
 					onChange={handleChange('name')}
 					type="text"
 					className="form-control"
-					placeholder="Type your name"
+					placeholder="enter your full name"
 					required
 				/>
 			</div>
@@ -137,7 +137,7 @@ const Register = () => {
 					onChange={handleChange('email')}
 					type="email"
 					className="form-control"
-					placeholder="Type your email"
+					placeholder="enter your email"
 					required
 				/>
 			</div>
@@ -147,7 +147,7 @@ const Register = () => {
 					onChange={handleChange('password')}
 					type="password"
 					className="form-control"
-					placeholder="Type your password"
+					placeholder="enter your password"
 					required
 				/>
 			</div>

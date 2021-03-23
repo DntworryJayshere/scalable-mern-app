@@ -2,6 +2,10 @@ import Head from 'next/head';
 import Link from 'next/link';
 import Router from 'next/router';
 import { isAuth, logout } from '../helpers/auth';
+
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
@@ -11,80 +15,94 @@ Router.onRouteChangeError = (url) => NProgress.done();
 
 const Layout = ({ children }) => {
 	const head = () => (
-		<React.Fragment>
+		<Head>
 			<link
 				rel="stylesheet"
-				href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-				integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-				crossOrigin="anonymous"
+				href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css"
+				integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+				crossorigin="anonymous"
 			/>
-		</React.Fragment>
+		</Head>
 	);
 
 	const nav = () => (
-		<ul className="nav nav-tabs bg-warning">
-			<li className="nav-item">
-				<Link href="/">
-					<a className="nav-link text-dark">Home</a>
+		<Nav className="justify-content-center" as="ul">
+			<Nav.Item as="li">
+				<Link href="/" passHref>
+					<Nav.Link as="a">Home</Nav.Link>
 				</Link>
-			</li>
-
-			<li className="nav-item">
-				<Link href="/user/link/create">
-					<a
-						className="nav-link text-dark btn btn-success"
-						style={{ borderRadius: '0px' }}
-					>
-						Submit a link
-					</a>
+			</Nav.Item>
+			<Nav.Item as="li">
+				<Link href="/user/link/create" passHref>
+					<Nav.Link as="a">Submit a link</Nav.Link>
 				</Link>
-			</li>
+			</Nav.Item>
 
 			{!isAuth() && (
 				<React.Fragment>
-					<li className="nav-item">
-						<Link href="/login">
-							<a className="nav-link text-dark">Login</a>
+					<Nav.Item as="li">
+						<Link href="/login" passHref>
+							<Nav.Link as="a">Login</Nav.Link>
 						</Link>
-					</li>
-					<li className="nav-item">
-						<Link href="/register">
-							<a className="nav-link text-dark">Register</a>
+					</Nav.Item>
+					<Nav.Item as="li">
+						<Link href="/register" passHref>
+							<Nav.Link as="a">Register</Nav.Link>
 						</Link>
-					</li>
+					</Nav.Item>
 				</React.Fragment>
 			)}
 
 			{isAuth() && isAuth().role === 'admin' && (
-				<li className="nav-item ml-auto">
-					<Link href="/admin">
-						<a className="nav-link text-dark">{isAuth().name}</a>
-					</Link>
-				</li>
+				<React.Fragment>
+					<Nav.Item as="li">
+						<Link href="/admin" passHref>
+							<Nav.Link as="a">Admin Page</Nav.Link>
+						</Link>
+					</Nav.Item>
+					<Nav.Item as="li">
+						<Nav.Link style={{ cursor: 'pointer' }} as="a" onClick={logout}>
+							Logout
+						</Nav.Link>
+					</Nav.Item>
+				</React.Fragment>
 			)}
 
 			{isAuth() && isAuth().role === 'subscriber' && (
-				<li className="nav-item ml-auto">
-					<Link href="/user">
-						<a className="nav-link text-dark">{isAuth().name}</a>
-					</Link>
-				</li>
+				<React.Fragment>
+					<Nav.Item as="li">
+						<Link href="/user" passHref>
+							<Nav.Link as="a">User Page</Nav.Link>
+						</Link>
+					</Nav.Item>
+					<Nav.Item as="li">
+						<Nav.Link style={{ cursor: 'pointer' }} as="a" onClick={logout}>
+							Logout
+						</Nav.Link>
+					</Nav.Item>
+				</React.Fragment>
 			)}
-
-			{isAuth() && (
-				<li className="nav-item">
-					<a onClick={logout} className="nav-link text-dark">
-						Logout
-					</a>
-				</li>
-			)}
-		</ul>
+		</Nav>
 	);
 
 	return (
-		<React.Fragment>
-			{head()} {nav()} <div className="container pt-5 pb-5">{children}</div>
-		</React.Fragment>
+		<>
+			<Navbar
+				collapseOnSelect
+				expand="lg"
+				bg="light"
+				variant="light"
+				className="justify-content-center"
+			>
+				<Navbar.Toggle aria-controls="responsive-navbar-nav" />
+				<Navbar.Collapse className="justify-content-center">
+					<React.Fragment>
+						{head()} {nav()}
+					</React.Fragment>
+				</Navbar.Collapse>
+			</Navbar>
+			<Container className="pt-5 pb-5">{children}</Container>
+		</>
 	);
 };
 

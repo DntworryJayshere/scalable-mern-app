@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const AWS = require('aws-sdk');
 const shortId = require('shortid');
@@ -47,10 +46,9 @@ router.post(
 			User.findOne({ email }).exec((err, user) => {
 				if (user) {
 					console.log(err);
-					return res.status(400).json({
-						error: 'Email is taken',
-					});
+					return res.status(400).json({ errors: [{ msg: 'User already exists' }] });
 				}
+				
 				// generate token with user name email and password
 				const token = jwt.sign(
 					{ name, email, password, categories },
@@ -68,7 +66,7 @@ router.post(
 				sendEmailOnRegister
 					.then((data) => {
 						console.log('email submitted to SES', data);
-						res.json({
+						return res.json({
 							message: `Email has been sent to ${email}, Follow the instructions to complete your registration`,
 						});
 					})

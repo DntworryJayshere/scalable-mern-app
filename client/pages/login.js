@@ -8,7 +8,6 @@ import { API } from '../config';
 import { authenticate, isAuth } from '../helpers/auth';
 
 //fully tested for unauthenticated user - login functional for admin and user
-
 const Login = () => {
 	const [state, setState] = useState({
 		email: '',
@@ -66,7 +65,7 @@ const Login = () => {
 					onChange={handleChange('email')}
 					type="email"
 					className="form-control"
-					placeholder="Type your email"
+					placeholder="enter your email"
 					required
 				/>
 			</div>
@@ -76,7 +75,7 @@ const Login = () => {
 					onChange={handleChange('password')}
 					type="password"
 					className="form-control"
-					placeholder="Type your password"
+					placeholder="enter your password"
 					required
 				/>
 			</div>
