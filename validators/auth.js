@@ -6,6 +6,9 @@ exports.userRegisterValidator = [
 	check('password', 'Password must be at least 6 characters long').isLength({
 		min: 6,
 	}),
+	check('categories')
+		.isLength({ min: 6 })
+		.withMessage('Pick at aleast one category'),
 ];
 
 exports.userLoginValidator = [

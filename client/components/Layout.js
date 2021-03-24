@@ -22,6 +22,7 @@ const Layout = ({ children }) => {
 				integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
 				crossOrigin="anonymous"
 			/>
+			<link rel="stylesheet" href="/static/css/styles.css" />
 		</Head>
 	);
 

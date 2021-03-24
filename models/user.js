@@ -39,6 +39,13 @@ const userSchema = new Schema(
 			data: String,
 			default: '',
 		},
+		categories: [
+			{
+				type: Schema.Types.ObjectId,
+				ref: 'Category',
+				required: true,
+			},
+		],
 	},
 	{ timestamps: true }
 );
