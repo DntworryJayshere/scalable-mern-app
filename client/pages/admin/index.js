@@ -2,38 +2,43 @@ import Layout from '../../components/Layout';
 import withAdmin from '../withAdmin';
 import Link from 'next/link';
 
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 const Admin = ({ user }) => (
-    <Layout>
-        <h1>Admin Dashboard</h1>
-        <br />
-        <div className="row">
-            <div className="col-md-4">
-                <ul className="nav flex-column">
-                    <li className="nav-item">
-                        <a href="/admin/category/create" className="nav-link">
-                            Create category
-                        </a>
-                    </li>
-                    <li className="nav-item">
-                        <Link href="/admin/category/read">
-                            <a className="nav-link">All categories</a>
-                        </Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link href="/admin/link/read">
-                            <a className="nav-link">All Links</a>
-                        </Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link href="/user/profile/update">
-                            <a className="nav-link">Profile update</a>
-                        </Link>
-                    </li>
-                </ul>
-            </div>
-            <div className="col-md-8"></div>
-        </div>
-    </Layout>
+	<Layout>
+		<h1>Admin Dashboard</h1>
+		<br />
+		<Row className="row">
+			<Col md={4}>
+				<ul>
+					<li>
+						<a href="/admin/category/create">Create category</a>
+					</li>
+					<li>
+						<Link href="/admin/category/read">
+							<a>All categories</a>
+						</Link>
+					</li>
+					<li>
+						<Link href="/admin/link/read">
+							<a>All Links</a>
+						</Link>
+					</li>
+					<li>
+						<Link href="/user/profile/update">
+							<a>Profile update</a>
+						</Link>
+					</li>
+				</ul>
+			</Col>
+			<Col md={8}>
+				{' '}
+				Stuff to go here --- links are currently working but need to read up on
+				nextjs link syntax{' '}
+			</Col>
+		</Row>
+	</Layout>
 );
 
 export default withAdmin(Admin);

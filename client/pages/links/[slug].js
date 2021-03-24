@@ -7,14 +7,10 @@ import moment from 'moment';
 import { API, APP_NAME } from '../../config';
 import InfiniteScroll from 'react-infinite-scroller';
 
-const Links = ({
-	query,
-	category,
-	links,
-	totalLinks,
-	linksLimit,
-	linkSkip,
-}) => {
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
+const Links = ({ query, category, links, totalLinks, linksLimit }) => {
 	const [allLinks, setAllLinks] = useState(links);
 	const [limit] = useState(linksLimit);
 	const [skip, setSkip] = useState(0);
@@ -57,30 +53,30 @@ const Links = ({
 		loadPopular();
 	};
 
-	const loadUpdatedLinks = async () => {
-		const response = await axios.post(`${API}/category/${query.slug}`);
-		setAllLinks(response.data.links);
-	};
+	// const loadUpdatedLinks = async () => {
+	// 	const response = await axios.post(`${API}/category/${query.slug}`);
+	// 	setAllLinks(response.data.links);
+	// };
 
 	const listOfPopularLinks = () =>
 		popular.map((l, i) => (
-			<div key={i} className="row alert alert-secondary p-2">
-				<div className="col-md-8" onClick={() => handleClick(l._id)}>
+			<Row key={i} className="alert alert-secondary p-2">
+				<Col md={8} onClick={() => handleClick(l._id)}>
 					<a href={l.url} target="_blank">
 						<h5 className="pt-2">{l.title}</h5>
 						<h6 className="pt-2 text-danger" style={{ fontSize: '12px' }}>
 							{l.url}
 						</h6>
 					</a>
-				</div>
+				</Col>
 
-				<div className="col-md-4 pt-2">
+				<Col md={4}>
 					<span className="pull-right">
 						{moment(l.createdAt).fromNow()} by {l.postedBy.name}
 					</span>
-				</div>
+				</Col>
 
-				<div className="col-md-12">
+				<Col md={12}>
 					<span className="badge text-dark">
 						{l.type} {l.medium}
 					</span>
@@ -92,22 +88,22 @@ const Links = ({
 					<span className="badge text-secondary pull-right">
 						{l.clicks} clicks
 					</span>
-				</div>
-			</div>
+				</Col>
+			</Row>
 		));
 
 	const listOfLinks = () =>
 		allLinks.map((l, i) => (
-			<div key={i} className="row alert alert-primary p-2">
-				<div className="col-md-8" onClick={(e) => handleClick(l._id)}>
+			<Row key={i} className="alert alert-primary p-2">
+				<Col md={8} onClick={(e) => handleClick(l._id)}>
 					<a href={l.url} target="_blank">
 						<h5 className="pt-2">{l.title}</h5>
 						<h6 className="pt-2 text-danger" style={{ fontSize: '12px' }}>
 							{l.url}
 						</h6>
 					</a>
-				</div>
-				<div className="col-md-4 pt-2">
+				</Col>
+				<Col md={4} className="pt-2">
 					<span className="pull-right">
 						{moment(l.createdAt).fromNow()} by {l.postedBy.name}
 					</span>
@@ -115,8 +111,8 @@ const Links = ({
 					<span className="badge text-secondary pull-right">
 						{l.clicks} clicks
 					</span>
-				</div>
-				<div className="col-md-12">
+				</Col>
+				<Col md={12}>
 					<span className="badge text-dark">
 						{l.type} / {l.medium}
 					</span>
@@ -125,8 +121,8 @@ const Links = ({
 							{c.name}
 						</span>
 					))}
-				</div>
-			</div>
+				</Col>
+			</Row>
 		));
 
 	const loadMore = async () => {
@@ -146,23 +142,23 @@ const Links = ({
 		<Fragment>
 			{head()}
 			<Layout>
-				<div className="row">
-					<div className="col-md-8">
+				<Row>
+					<Col md={8}>
 						<h1 className="display-4 font-weight-bold">
 							{category.name} - URL/Links
 						</h1>
 						<div className="lead alert alert-secondary pt-4">
 							{renderHTML(category.content || '')}
 						</div>
-					</div>
-					<div className="col-md-4">
+					</Col>
+					<Col md={4}>
 						<img
 							src={category.image.url}
 							alt={category.name}
 							style={{ width: 'auto', maxHeight: '200px' }}
 						/>
-					</div>
-				</div>
+					</Col>
+				</Row>
 				<br />
 				<InfiniteScroll
 					pageStart={0}
@@ -172,13 +168,13 @@ const Links = ({
 						<img key={0} src="/static/images/loading.gif" alt="loading" />
 					}
 				>
-					<div className="row">
-						<div className="col-md-8">{listOfLinks()}</div>
-						<div className="col-md-4">
+					<Row>
+						<Col md={8}>{listOfLinks()}</Col>
+						<Col md={4}>
 							<h2 className="lead">Most popular in {category.name}</h2>
 							<div className="p-3">{listOfPopularLinks()}</div>
-						</div>
-					</div>
+						</Col>
+					</Row>
 				</InfiniteScroll>
 			</Layout>
 		</Fragment>

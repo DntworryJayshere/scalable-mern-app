@@ -7,28 +7,35 @@ import { isAuth } from '../../../helpers/auth';
 import { API } from '../../../config';
 import { showSuccessMessage, showErrorMessage } from '../../../helpers/alerts';
 
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+
 const Update = ({ oldLink, token }) => {
 	// state
 	const [state, setState] = useState({
 		title: oldLink.title,
+		description: oldLink.description,
 		url: oldLink.url,
+		url2: oldLink.url2,
+		type: oldLink.type,
 		categories: oldLink.categories,
 		loadedCategories: [],
 		success: '',
 		error: '',
-		type: oldLink.type,
-		medium: oldLink.medium,
 	});
 
 	const {
 		title,
+		description,
 		url,
+		url2,
+		type,
 		categories,
 		loadedCategories,
 		success,
 		error,
-		type,
-		medium,
 	} = state;
 
 	// load categories when component mounts using useEffect
@@ -40,115 +47,6 @@ const Update = ({ oldLink, token }) => {
 		const response = await axios.get(`${API}/category/categories`);
 		setState({ ...state, loadedCategories: response.data });
 	};
-
-	const handleTitleChange = (e) => {
-		setState({ ...state, title: e.target.value, error: '', success: '' });
-	};
-
-	const handleURLChange = (e) => {
-		setState({ ...state, url: e.target.value, error: '', success: '' });
-	};
-
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-		// console.table({ title, url, categories, type, medium });
-		// use update link based on logged in user role
-
-		let dynamicUpdateUrl;
-		if (isAuth() && isAuth().role === 'admin') {
-			dynamicUpdateUrl = `${API}/link/admin/${oldLink._id}`;
-		} else {
-			dynamicUpdateUrl = `${API}/link/${oldLink._id}`;
-		}
-
-		try {
-			const response = await axios.put(
-				dynamicUpdateUrl,
-				{ title, url, categories, type, medium },
-				{
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				}
-			);
-			setState({ ...state, success: 'Link is updated' });
-		} catch (error) {
-			console.log('LINK SUBMIT ERROR', error);
-			setState({ ...state, error: error.response.data.error });
-		}
-	};
-
-	const handleTypeClick = (e) => {
-		setState({ ...state, type: e.target.value, success: '', error: '' });
-	};
-
-	const handleMediumClick = (e) => {
-		setState({ ...state, medium: e.target.value, success: '', error: '' });
-	};
-
-	const showMedium = () => (
-		<React.Fragment>
-			<div className="form-check ml-3">
-				<label className="form-check-label">
-					<input
-						type="radio"
-						onClick={handleMediumClick}
-						checked={medium === 'video'}
-						value="video"
-						className="from-check-input"
-						name="medium"
-					/>{' '}
-					Video
-				</label>
-			</div>
-
-			<div className="form-check ml-3">
-				<label className="form-check-label">
-					<input
-						type="radio"
-						onClick={handleMediumClick}
-						checked={medium === 'book'}
-						value="book"
-						className="from-check-input"
-						name="medium"
-					/>{' '}
-					Book
-				</label>
-			</div>
-		</React.Fragment>
-	);
-
-	const showTypes = () => (
-		<React.Fragment>
-			<div className="form-check ml-3">
-				<label className="form-check-label">
-					<input
-						type="radio"
-						onClick={handleTypeClick}
-						checked={type === 'free'}
-						value="free"
-						className="from-check-input"
-						name="type"
-					/>{' '}
-					Free
-				</label>
-			</div>
-
-			<div className="form-check ml-3">
-				<label className="form-check-label">
-					<input
-						type="radio"
-						onClick={handleTypeClick}
-						checked={type === 'paid'}
-						value="paid"
-						className="from-check-input"
-						name="type"
-					/>{' '}
-					Paid
-				</label>
-			</div>
-		</React.Fragment>
-	);
 
 	const handleToggle = (c) => () => {
 		// return the first index or -1
@@ -170,82 +68,157 @@ const Update = ({ oldLink, token }) => {
 			loadedCategories &&
 			loadedCategories.map((c, i) => (
 				<li className="list-unstyled" key={c._id}>
-					<input
+					<Form.Check
+						label={c.name}
 						type="checkbox"
-						checked={categories.includes(c._id)}
 						onChange={handleToggle(c._id)}
-						className="mr-2"
 					/>
-					<label className="form-check-label">{c.name}</label>
 				</li>
 			))
 		);
 	};
 
+	const onChange = (e) =>
+		setState({ ...state, [e.target.name]: e.target.value });
+
+	const onSubmit = async (e) => {
+		e.preventDefault();
+		setState({ ...state });
+
+		try {
+			const response = await axios.post(
+				`${API}/link`,
+				{ title, description, url, url2, type, categories },
+				{
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				}
+			);
+			setState({
+				...state,
+				title: '',
+				description: '',
+				url: '',
+				url2: '',
+				type: '',
+				success: 'Link is created',
+				error: '',
+				loadedCategories: [],
+				categories: [],
+			});
+		} catch (error) {
+			console.log('LINK SUBMIT ERROR', error);
+			setState({ ...state, error: error.response.data.error });
+		}
+	};
+
+	const showTypes = () => (
+		<React.Fragment>
+			<Form.Group as={Row}>
+				<Form.Label as="legend">Type:</Form.Label>
+				<Form.Control
+					as="select"
+					custom
+					name="type"
+					value={type}
+					onChange={onChange}
+					type="text"
+					required
+				>
+					<option></option>
+					<option>Project</option>
+					<option>Personal</option>
+					<option>Source Documentation</option>
+					<option>Learning Resource</option>
+				</Form.Control>
+			</Form.Group>
+		</React.Fragment>
+	);
+
 	// link create form
 	const submitLinkForm = () => (
-		<form onSubmit={handleSubmit}>
-			<div className="form-group">
-				<label className="text-muted">Title</label>
-				<input
-					type="text"
-					className="form-control"
-					onChange={handleTitleChange}
+		<Form onSubmit={onSubmit}>
+			<Form.Group>
+				<Form.Label>Title</Form.Label>
+				<Form.Control
 					value={title}
+					onChange={onChange}
+					name="title"
+					type="text"
+					placeholder="enter the title"
+					required
 				/>
-			</div>
-			<div className="form-group">
-				<label className="text-muted">URL</label>
-				<input
-					type="url"
-					className="form-control"
-					onChange={handleURLChange}
+			</Form.Group>
+			<br />
+			<Form.Group>
+				<Form.Label>Description</Form.Label>
+				<Form.Control
+					value={description}
+					onChange={onChange}
+					name="description"
+					type="text"
+					placeholder="enter a short description"
+					required
+				/>
+			</Form.Group>
+			<br />
+			<Form.Group>
+				<Form.Label>URL</Form.Label>
+				<Form.Control
 					value={url}
+					onChange={onChange}
+					name="url"
+					type="url"
+					placeholder="enter the url"
+					required
 				/>
-			</div>
-			<div>
-				<button
-					disabled={!token}
-					className="btn btn-outline-warning"
-					type="submit"
-				>
-					{isAuth() || token ? 'Update' : 'Login to update'}
-				</button>
-			</div>
-		</form>
+			</Form.Group>
+			<br />
+			<Form.Group>
+				<Form.Label>Additional URL</Form.Label>
+				<Form.Control
+					value={url2}
+					onChange={onChange}
+					name="url2"
+					type="url"
+					placeholder="enter additional url if neccessary"
+				/>
+			</Form.Group>
+			<br />
+			<Form.Group>
+				<Button disabled={!token} name="submit" type="submit" value="Post">
+					{isAuth() || token ? 'Post' : 'Login to post'}
+				</Button>
+			</Form.Group>
+		</Form>
 	);
 
 	return (
 		<Layout>
-			<div className="row">
-				<div className="col-md-12">
+			<Row>
+				<Col md={12}>
 					<h1>Update Link/URL</h1>
 					<br />
-				</div>
-			</div>
-			<div className="row">
-				<div className="col-md-4">
-					<div className="form-group">
-						<label className="text-muted ml-4">Category</label>
+				</Col>
+			</Row>
+			<Row>
+				<Col md={4}>
+					<Form.Group as={Row}>
+						<Form.Label as="legend">Category:</Form.Label>
+
 						<ul style={{ maxHeight: '100px', overflowY: 'scroll' }}>
 							{showCategories()}
 						</ul>
-					</div>
-					<div className="form-group">
-						<label className="text-muted ml-4">Type</label>
-						{showTypes()}
-					</div>
-					<div className="form-group">
-						<label className="text-muted ml-4">Medium</label>
-						{showMedium()}
-					</div>
-				</div>
-				<div className="col-md-8">
+					</Form.Group>
+					{showTypes()}
+				</Col>
+				<Col md={8}>
 					{success && showSuccessMessage(success)}
 					{error && showErrorMessage(error)}
 					{submitLinkForm()}
-				</div>
-			</div>
+				</Col>
+			</Row>
 		</Layout>
 	);
 };

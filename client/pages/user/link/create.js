@@ -77,13 +77,6 @@ const Create = ({ token }) => {
 		);
 	};
 
-	const handleClick = (e) => {
-		setState({
-			...state,
-			[e.target.checked]: !e.target.checked,
-		});
-	};
-
 	const onChange = (e) =>
 		setState({ ...state, [e.target.name]: e.target.value });
 

@@ -39,40 +39,64 @@ const User = ({ user, userLinks, token }) => {
 
 	const listOfLinks = () =>
 		userLinks.map((l, i) => (
-			<Row key={i} className="alert alert-primary p-2">
+			<Row key={i} className="alert alert-primary">
 				<Col md={8}>
-					<a href={l.url} target="_blank">
-						<h5 className="pt-2">{l.title}</h5>
-						<h6 className="pt-2 text-danger" style={{ fontSize: '12px' }}>
+					<h5>Title: {l.title}</h5>
+
+					<h6 style={{ fontSize: '1rem' }}>
+						Main Url: {'   '}
+						<a href={l.url} target="_blank">
 							{l.url}
-						</h6>
-					</a>
+						</a>
+					</h6>
+
+					<h6 style={{ fontSize: '1rem' }}>
+						Supplemental Url: {'   '}
+						<a href={l.url2} target="_blank">
+							{l.url2}
+						</a>
+					</h6>
+					<p>Description: {l.description}</p>
 				</Col>
-				<Col md={4} className="pt-2">
-					<span className="pull-right">
+				<Col md={4} style={{ textAlign: 'right' }}>
+					<span>
 						{moment(l.createdAt).fromNow()} by {l.postedBy.name}
 					</span>
 				</Col>
-				<Col md={12}>
-					<span className="badge text-dark">
-						{l.type} / {l.medium}
-					</span>
-					{l.categories.map((c, i) => (
-						<span key={i} className="badge text-success">
-							{c.name}
+				<Row>
+					<Col md={12}>
+						<p className="text-dark" style={{ fontSize: '.9rem' }}>
+							<div>
+								Type: {'   '}
+								{l.type}
+							</div>
+							<div>
+								Categories: {'   '}
+								{l.categories.map((c, i) => (
+									<span key={i}>
+										{c.name} , {'   '}
+									</span>
+								))}
+							</div>
+						</p>
+					</Col>
+					<Col md={8}>
+						<span className="text-secondary" style={{ textAlign: 'left' }}>
+							{l.clicks} clicks
+						</span>{' '}
+					</Col>
+					<Col md={4} style={{ textAlign: 'right', cursor: 'pointer' }}>
+						<Link href={`/user/link/${l._id}`}>
+							<span className="text-warning">Update</span>
+						</Link>{' '}
+						<span
+							onClick={(e) => confirmDelete(e, l._id)}
+							className="text-danger"
+						>
+							Delete
 						</span>
-					))}
-					<span className="badge text-secondary">{l.clicks} clicks</span>
-					<Link href={`/user/link/${l._id}`}>
-						<span className="badge text-warning pull-right">Update</span>
-					</Link>
-					<span
-						onClick={(e) => confirmDelete(e, l._id)}
-						className="badge text-danger pull-right"
-					>
-						Delete
-					</span>
-				</Col>
+					</Col>
+				</Row>
 			</Row>
 		));
 
@@ -81,12 +105,12 @@ const User = ({ user, userLinks, token }) => {
 			<h1>{user.name}</h1>
 			<hr />
 			<Row>
-				<Col md={4}>
+				<Col md={2}>
 					<Link href="/user/profile/update">
 						<a className="nav link">Update profile</a>
 					</Link>
 				</Col>
-				<Col md={8}>
+				<Col md={10}>
 					<h2>Your links</h2>
 					<br />
 					{listOfLinks()}
