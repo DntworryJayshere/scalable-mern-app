@@ -6,6 +6,9 @@ import moment from 'moment';
 import { API } from '../../config';
 import withUser from '../withUser';
 
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
 //fully tested (unauthenticated, authenticated user)
 
 const User = ({ user, userLinks, token }) => {
@@ -36,22 +39,21 @@ const User = ({ user, userLinks, token }) => {
 
 	const listOfLinks = () =>
 		userLinks.map((l, i) => (
-			<div key={i} className="row alert alert-primary p-2">
-				<div className="col-md-8">
+			<Row key={i} className="alert alert-primary p-2">
+				<Col md={8}>
 					<a href={l.url} target="_blank">
 						<h5 className="pt-2">{l.title}</h5>
 						<h6 className="pt-2 text-danger" style={{ fontSize: '12px' }}>
 							{l.url}
 						</h6>
 					</a>
-				</div>
-				<div className="col-md-4 pt-2">
+				</Col>
+				<Col md={4} className="pt-2">
 					<span className="pull-right">
 						{moment(l.createdAt).fromNow()} by {l.postedBy.name}
 					</span>
-				</div>
-
-				<div className="col-md-12">
+				</Col>
+				<Col md={12}>
 					<span className="badge text-dark">
 						{l.type} / {l.medium}
 					</span>
@@ -61,52 +63,35 @@ const User = ({ user, userLinks, token }) => {
 						</span>
 					))}
 					<span className="badge text-secondary">{l.clicks} clicks</span>
-
 					<Link href={`/user/link/${l._id}`}>
 						<span className="badge text-warning pull-right">Update</span>
 					</Link>
-
 					<span
 						onClick={(e) => confirmDelete(e, l._id)}
 						className="badge text-danger pull-right"
 					>
 						Delete
 					</span>
-				</div>
-			</div>
+				</Col>
+			</Row>
 		));
 
 	return (
-		//tested
 		<Layout>
-			<h1>
-				{user.name}'s dashboard{' '}
-				<span className="text-danger">/{user.role}</span>
-			</h1>
+			<h1>{user.name}</h1>
 			<hr />
-
-			<div className="row">
-				<div className="col-md-4">
-					<ul className="nav flex-column">
-						<li className="nav-item">
-							<Link href="/user/link/create">
-								<a className="nav link">Submit a link</a>
-							</Link>
-						</li>
-						<li className="nav-item">
-							<Link href="/user/profile/update">
-								<a className="nav link">Update profile</a>
-							</Link>
-						</li>
-					</ul>
-				</div>
-
-				<div className="col-md-8">
+			<Row>
+				<Col md={4}>
+					<Link href="/user/profile/update">
+						<a className="nav link">Update profile</a>
+					</Link>
+				</Col>
+				<Col md={8}>
 					<h2>Your links</h2>
 					<br />
 					{listOfLinks()}
-				</div>
-			</div>
+				</Col>
+			</Row>
 		</Layout>
 	);
 };

@@ -6,6 +6,10 @@ import { API } from '../../../config';
 import { updateUser } from '../../../helpers/auth';
 import withUser from '../../withUser';
 
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+
 const Profile = ({ user, token }) => {
 	const [state, setState] = useState({
 		name: user.name,
@@ -13,7 +17,6 @@ const Profile = ({ user, token }) => {
 		password: '',
 		error: '',
 		success: '',
-		buttonText: 'Update',
 		loadedCategories: [],
 		categories: user.categories,
 	});
@@ -24,7 +27,6 @@ const Profile = ({ user, token }) => {
 		password,
 		error,
 		success,
-		buttonText,
 		loadedCategories,
 		categories,
 	} = state;
@@ -59,31 +61,29 @@ const Profile = ({ user, token }) => {
 			loadedCategories &&
 			loadedCategories.map((c, i) => (
 				<li className="list-unstyled" key={c._id}>
-					<input
+					<Form.Check
+						label={c.name}
 						type="checkbox"
 						onChange={handleToggle(c._id)}
-						checked={categories.includes(c._id)}
-						className="mr-2"
 					/>
-					<label className="form-check-label">{c.name}</label>
 				</li>
 			))
 		);
 	};
 
-	const handleChange = (name) => (e) => {
-		setState({
-			...state,
-			[name]: e.target.value,
-			error: '',
-			success: '',
-			buttonText: 'Update',
-		});
-	};
+	const onChange = (e) =>
+		setState({ ...state, [e.target.name]: e.target.value });
 
-	const handleSubmit = async (e) => {
+	const onSubmit = async (e) => {
 		e.preventDefault();
-		setState({ ...state, buttonText: 'Updating...' });
+		console.table({
+			name,
+			email,
+			password,
+			categories,
+		});
+		setState({ ...state });
+
 		try {
 			const response = await axios.put(
 				`${API}/user`,
@@ -102,7 +102,6 @@ const Profile = ({ user, token }) => {
 			updateUser(response.data, () => {
 				setState({
 					...state,
-					buttonText: 'Updated',
 					success: 'Profile updated successfully',
 				});
 			});
@@ -110,67 +109,72 @@ const Profile = ({ user, token }) => {
 			console.log(error);
 			setState({
 				...state,
-				buttonText: 'Update',
 				error: error.response.data.error,
 			});
 		}
 	};
 
 	const updateForm = () => (
-		<form onSubmit={handleSubmit}>
-			<div className="form-group">
-				<input
+		<Form onSubmit={onSubmit}>
+			<Form.Group>
+				<Form.Label>Full Name</Form.Label>
+				<Form.Control
 					value={name}
-					onChange={handleChange('name')}
+					onChange={onChange}
+					name="name"
 					type="text"
-					className="form-control"
-					placeholder="Type your name"
+					placeholder="enter your full name..."
 					required
 				/>
-			</div>
-			<div className="form-group">
-				<input
+			</Form.Group>
+			<br />
+			<Form.Group>
+				<Form.Label>Email</Form.Label>
+				<Form.Control
 					value={email}
-					onChange={handleChange('email')}
+					onChange={onChange}
+					name="email"
 					type="email"
-					className="form-control"
-					placeholder="Type your email"
+					placeholder="enter your address..."
 					required
-					disabled
 				/>
-			</div>
-			<div className="form-group">
-				<input
+			</Form.Group>
+			<br />
+			<Form.Group>
+				<Form.Label>Password</Form.Label>
+				<Form.Control
 					value={password}
-					onChange={handleChange('password')}
+					onChange={onChange}
+					name="password"
 					type="password"
-					className="form-control"
-					placeholder="Type your password"
+					placeholder="enter your password..."
+					required
 				/>
-			</div>
-
-			<div className="form-group">
-				<label className="text-muted ml-4">Category</label>
+			</Form.Group>
+			<br />
+			<Form.Group>
+				<Form.Label>Category</Form.Label>
 				<ul style={{ maxHeight: '100px', overflowY: 'scroll' }}>
 					{showCategories()}
 				</ul>
-			</div>
-
-			<div className="form-group">
-				<button className="btn btn-outline-warning">{buttonText}</button>
-			</div>
-		</form>
+			</Form.Group>
+			<Form.Group>
+				<Button name="submit" type="submit" value="Register">
+					Register
+				</Button>
+			</Form.Group>
+		</Form>
 	);
 
 	return (
 		<Layout>
-			<div className="col-md-6 offset-md-3">
+			<Col md={6} className="offset-md-3">
 				<h1>Update Profile</h1>
 				<br />
 				{success && showSuccessMessage(success)}
 				{error && showErrorMessage(error)}
 				{updateForm()}
-			</div>
+			</Col>
 		</Layout>
 	);
 };
