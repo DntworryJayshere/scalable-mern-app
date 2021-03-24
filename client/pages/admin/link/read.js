@@ -8,7 +8,10 @@ import InfiniteScroll from 'react-infinite-scroller';
 import withAdmin from '../../withAdmin';
 import { getCookie } from '../../../helpers/auth';
 
-const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+
+const Links = ({ token, links, totalLinks, linksLimit }) => {
 	const [allLinks, setAllLinks] = useState(links);
 	const [limit] = useState(linksLimit);
 	const [skip, setSkip] = useState(0);
@@ -37,28 +40,33 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
 		}
 	};
 
+	const handleClick = async (linkId) => {
+		const response = await axios.put(`${API}/link/click-count`, { linkId });
+		loadPopular();
+	};
+
 	const listOfLinks = () =>
 		allLinks.map((l, i) => (
-			<div key={i} className="row alert alert-primary p-2">
-				<div className="col-md-8" onClick={(e) => handleClick(l._id)}>
+			<Row key={i} className="alert alert-primary p-2">
+				<Col md={8} onClick={(e) => handleClick(l._id)}>
 					<a href={l.url} target="_blank">
 						<h5 className="pt-2">{l.title}</h5>
 						<h6 className="pt-2 text-danger" style={{ fontSize: '12px' }}>
 							{l.url}
 						</h6>
 					</a>
-				</div>
-				<div className="col-md-4 pt-2">
-					<span className="pull-right">
+				</Col>
+				<Col md={4} style={{ textAlign: 'right' }}>
+					<span>
 						{moment(l.createdAt).fromNow()} by {l.postedBy.name}
 					</span>
 					<br />
 					<span className="badge text-secondary pull-right">
 						{l.clicks} clicks
 					</span>
-				</div>
+				</Col>
 
-				<div className="col-md-12">
+				<Col md={12}>
 					<span className="badge text-dark">
 						{l.type} / {l.medium}
 					</span>
@@ -79,8 +87,8 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
 							<span className="badge text-warning pull-right">Update</span>
 						</a>
 					</Link>
-				</div>
-			</div>
+				</Col>
+			</Row>
 		));
 
 	const loadMore = async () => {
@@ -105,22 +113,21 @@ const Links = ({ token, links, totalLinks, linksLimit, linkSkip }) => {
 
 	return (
 		<Layout>
-			<div className="row">
-				<div className="col-md-12">
+			<Row>
+				<Col md={12}>
 					<h1 className="display-4 font-weight-bold">All Links</h1>
-				</div>
-			</div>
+				</Col>
+			</Row>
 			<br />
-
 			<InfiniteScroll
 				pageStart={0}
 				loadMore={loadMore}
 				hasMore={size > 0 && size >= limit}
 				loader={<img key={0} src="/static/images/loading.gif" alt="loading" />}
 			>
-				<div className="row">
-					<div className="col-md-12">{listOfLinks()}</div>
-				</div>
+				<Row>
+					<Col md={12}>{listOfLinks()}</Col>
+				</Row>
 			</InfiniteScroll>
 		</Layout>
 	);

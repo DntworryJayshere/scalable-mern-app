@@ -27,7 +27,7 @@ const Admin = ({ user }) => (
 					</li>
 					<li>
 						<Link href="/user/profile/update">
-							<a>Profile update</a>
+							<a>Update Profile</a>
 						</Link>
 					</li>
 				</ul>

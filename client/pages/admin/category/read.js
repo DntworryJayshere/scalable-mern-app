@@ -6,6 +6,11 @@ import { showSuccessMessage, showErrorMessage } from '../../../helpers/alerts';
 import Layout from '../../../components/Layout';
 import withAdmin from '../../withAdmin';
 
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Card from 'react-bootstrap/Card';
+import CardGroup from 'react-bootstrap/CardGroup';
+
 const Read = ({ user, token }) => {
 	const [state, setState] = useState({
 		error: '',
@@ -49,55 +54,51 @@ const Read = ({ user, token }) => {
 
 	const listCategories = () =>
 		categories.map((c, i) => (
-			<Link key={i} href={`/link/links/${c.slug}`}>
-				<a
-					style={{ border: '1px solid red' }}
-					className="bg-light p-3 col-md-6"
-				>
-					<div>
-						<div className="row">
-							<div className="col-md-3">
-								<img
-									src={c.image && c.image.url}
-									alt={c.name}
-									style={{ width: '100px', height: 'auto' }}
-									className="pr-3"
-								/>
-							</div>
-							<div className="col-md-6">
-								<h3>{c.name}</h3>
-							</div>
-							<div className="col-md-3">
-								<Link href={`/admin/category/${c.slug}`}>
-									<button className="btn btn-sm btn-outline-success btn-block mb-1">
-										Update
-									</button>
-								</Link>
-
-								<button
-									onClick={(e) => confirmDelete(e, c.slug)}
-									className="btn btn-sm btn-outline-danger btn-block"
-								>
-									Delete
+			<Col key={i} md={4} style={{ padding: '1rem' }}>
+				<Card style={{ flex: 1 }} key={i}>
+					<Card.Img
+						variant="top"
+						src={c.image && c.image.url}
+						alt={c.name}
+						style={{ margin: 'auto', width: '100px', height: '100px' }}
+					/>
+					<Card.Body>
+						<Link href={`/link/links/${c.slug}`}>
+							<Card.Title as="a">{c.name}</Card.Title>
+						</Link>
+						<Card.Text>{c.text}</Card.Text>
+					</Card.Body>
+					<Card.Footer>
+						<small className="text-muted">
+							{' '}
+							<Link href={`/admin/category/${c.slug}`}>
+								<button className="btn btn-sm btn-outline-success btn-block mb-1">
+									Update
 								</button>
-							</div>
-						</div>
-					</div>
-				</a>
-			</Link>
+							</Link>
+							<button
+								onClick={(e) => confirmDelete(e, c.slug)}
+								className="btn btn-sm btn-outline-danger btn-block"
+							>
+								Delete
+							</button>
+						</small>
+					</Card.Footer>
+				</Card>
+			</Col>
 		));
 
 	return (
 		<Layout>
-			<div className="row">
-				<div className="col">
+			<Row>
+				<Col>
 					<h1>List of categories</h1>
 					<br />
 					{success && showSuccessMessage(success)}
-				</div>
-			</div>
+				</Col>
+			</Row>
 
-			<div className="row">{listCategories()}</div>
+			<CardGroup style={{ display: 'flex' }}>{listCategories()}</CardGroup>
 		</Layout>
 	);
 };
