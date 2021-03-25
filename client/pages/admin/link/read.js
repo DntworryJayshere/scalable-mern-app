@@ -40,31 +40,26 @@ const Links = ({ token, links, totalLinks, linksLimit }) => {
 		}
 	};
 
-	const handleClick = async (linkId) => {
-		const response = await axios.put(`${API}/link/click-count`, { linkId });
-		loadPopular();
-	};
-
 	const listOfLinks = () =>
 		allLinks.map((l, i) => (
 			<Row key={i} className="alert alert-primary">
 				<Col md={8}>
 					<h5>Title: {l.title}</h5>
-
 					<h6 style={{ fontSize: '1rem' }}>
 						Main Url: {'   '}
 						<a href={l.url} target="_blank">
 							{l.url}
 						</a>
 					</h6>
-
 					<h6 style={{ fontSize: '1rem' }}>
 						Supplemental Url: {'   '}
 						<a href={l.url2} target="_blank">
 							{l.url2}
 						</a>
 					</h6>
-					<p>Short Description: {l.shortdescription}</p>
+					<div>Short Description: {l.shortdescription}</div>
+					<div>Description: {l.description}</div>
+					<br />
 				</Col>
 				<Col md={4} style={{ textAlign: 'right' }}>
 					<span>

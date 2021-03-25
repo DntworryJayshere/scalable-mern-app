@@ -6,15 +6,18 @@ import { API } from '../../../config';
 import { withRouter } from 'next/router';
 import Layout from '../../../components/Layout';
 
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+
 const ActivateAccount = ({ router }) => {
 	const [state, setState] = useState({
 		name: '',
 		token: '',
-		buttonText: 'Activate Account',
 		success: '',
 		error: '',
 	});
-	const { name, token, buttonText, success, error } = state;
+	const { name, token, success, error } = state;
 
 	useEffect(() => {
 		let token = router.query.id;
@@ -27,8 +30,6 @@ const ActivateAccount = ({ router }) => {
 	const clickSubmit = async (e) => {
 		e.preventDefault();
 		// console.log('activate acccount');
-		setState({ ...state, buttonText: 'Activating' });
-
 		try {
 			const response = await axios.post(`${API}/auth/register/activate`, {
 				token,
@@ -38,13 +39,11 @@ const ActivateAccount = ({ router }) => {
 				...state,
 				name: '',
 				token: '',
-				buttonText: 'Activated',
 				success: response.data.message,
 			});
 		} catch (error) {
 			setState({
 				...state,
-				buttonText: 'Activate Account',
 				error: error.response.data.error,
 			});
 		}
@@ -52,20 +51,23 @@ const ActivateAccount = ({ router }) => {
 
 	return (
 		<Layout>
-			<div className="row">
-				<div className="col-md-6 offset-md-3">
-					<h1>G'day {name}, Ready to activate your account?</h1>
+			<Row>
+				<Col md={6} className="offset-md-3">
+					<h1>Hi {name}, Ready to activate your account?</h1>
 					<br />
 					{success && showSuccessMessage(success)}
 					{error && showErrorMessage(error)}
-					<button
-						className="btn btn-outline-warning btn-block"
+					<Button
 						onClick={clickSubmit}
+						className="btn btn-outline-warning btn-block"
+						name="submit"
+						type="submit"
+						value="Activate"
 					>
-						{buttonText}
-					</button>
-				</div>
-			</div>
+						Activate
+					</Button>
+				</Col>
+			</Row>
 		</Layout>
 	);
 };

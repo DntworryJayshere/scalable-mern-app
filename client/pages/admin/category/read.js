@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API } from '../../../config';
 import Link from 'next/link';
-import { showSuccessMessage, showErrorMessage } from '../../../helpers/alerts';
+import { showSuccessMessage } from '../../../helpers/alerts';
 import Layout from '../../../components/Layout';
 import withAdmin from '../../withAdmin';
 
@@ -11,14 +11,14 @@ import Col from 'react-bootstrap/Col';
 import Card from 'react-bootstrap/Card';
 import CardGroup from 'react-bootstrap/CardGroup';
 
-const Read = ({ user, token }) => {
+const Read = ({ token }) => {
 	const [state, setState] = useState({
 		error: '',
 		success: '',
 		categories: [],
 	});
 
-	const { error, success, categories } = state;
+	const { success, categories } = state;
 
 	useEffect(() => {
 		loadCategories();
@@ -72,11 +72,15 @@ const Read = ({ user, token }) => {
 						<small className="text-muted">
 							{' '}
 							<Link href={`/admin/category/${c.slug}`}>
-								<button className="btn btn-sm btn-outline-success btn-block">
+								<button
+									style={{ margin: '.5rem' }}
+									className="btn btn-sm btn-outline-success btn-block"
+								>
 									Update
 								</button>
 							</Link>
 							<button
+								style={{ margin: '.5rem' }}
 								onClick={(e) => confirmDelete(e, c.slug)}
 								className="btn btn-sm btn-outline-danger btn-block"
 							>

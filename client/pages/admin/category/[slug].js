@@ -21,7 +21,7 @@ const Update = ({ oldCategory, token }) => {
 		success: '',
 	});
 
-	const { name, content, image, imagePreview, success, error } = state;
+	const { name, content, image, success, error } = state;
 
 	const onChange = (e) =>
 		setState({ ...state, [e.target.name]: e.target.value });

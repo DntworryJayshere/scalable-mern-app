@@ -5,20 +5,24 @@ import {
 	showErrorMessage,
 } from '../../../../helpers/alerts';
 import { API } from '../../../../config';
-import Router, { withRouter } from 'next/router';
+import { withRouter } from 'next/router';
 import jwt from 'jsonwebtoken';
 import Layout from '../../../../components/Layout';
+
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 
 const ResetPassword = ({ router }) => {
 	const [state, setState] = useState({
 		name: '',
 		token: '',
 		newPassword: '',
-		buttonText: 'Reset Password',
 		success: '',
 		error: '',
 	});
-	const { name, token, newPassword, buttonText, success, error } = state;
+	const { name, token, newPassword, success, error } = state;
 
 	useEffect(() => {
 		console.log(router);
@@ -27,65 +31,65 @@ const ResetPassword = ({ router }) => {
 			setState({ ...state, name: decoded.name, token: router.query.id });
 	}, [router]);
 
-	const handleChange = (e) => {
-		setState({ ...state, newPassword: e.target.value, success: '', error: '' });
-	};
+	const onChange = (e) =>
+		setState({ ...state, [e.target.name]: e.target.value });
 
-	const handleSubmit = async (e) => {
+	const onSubmit = async (e) => {
 		e.preventDefault();
-		// console.log('post email to ', email);
-		setState({ ...state, buttonText: 'Sending' });
+		setState({ ...state });
 		try {
 			const response = await axios.put(`${API}/auth/reset-password`, {
 				resetPasswordLink: token,
 				newPassword,
 			});
-			// console.log('FORGOT PASSWORD', response);
+			console.log('FORGOT PASSWORD', response);
 			setState({
 				...state,
 				newPassword: '',
-				buttonText: 'Done',
 				success: response.data.message,
 			});
 		} catch (error) {
 			console.log('RESET PW ERROR', error);
 			setState({
 				...state,
-				buttonText: 'Forgot Password',
 				error: error.response.data.error,
 			});
 		}
 	};
 
 	const passwordResetForm = () => (
-		<form onSubmit={handleSubmit}>
-			<div className="form-group">
-				<input
-					type="password"
-					className="form-control"
-					onChange={handleChange}
+		<Form onSubmit={onSubmit}>
+			<Form.Group>
+				<Form.Label>Name</Form.Label>
+				<Form.Control
 					value={newPassword}
+					onChange={onChange}
+					name="newPassword"
+					type="password"
 					placeholder="Type new password"
 					required
 				/>
-			</div>
-			<div>
-				<button className="btn btn-outline-warning">{buttonText}</button>
-			</div>
-		</form>
+			</Form.Group>
+			<br />
+			<Form.Group>
+				<Button name="submit" type="submit" value="Reset">
+					Reset
+				</Button>
+			</Form.Group>
+		</Form>
 	);
 
 	return (
 		<Layout>
-			<div className="row">
-				<div className="col-md-6 offset-md-3">
+			<Row>
+				<Col md={6} className="offset-md-3">
 					<h1>Hi {name}, Ready to Reset Password?</h1>
 					<br />
 					{success && showSuccessMessage(success)}
 					{error && showErrorMessage(error)}
 					{passwordResetForm()}
-				</div>
-			</div>
+				</Col>
+			</Row>
 		</Layout>
 	);
 };

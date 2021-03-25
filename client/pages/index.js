@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Layout from '../components/Layout';
 import axios from 'axios';
 import moment from 'moment';
@@ -122,7 +122,9 @@ const Home = ({ categories }) => {
 				<CardGroup style={{ display: 'flex' }}>{listCategories()}</CardGroup>
 
 				<Row>
-					<h2 className="font-weight-bold pb-3">Trending {popular.length}</h2>
+					<h2 className="font-weight-bold pb-3">
+						Trending Links {popular.length}
+					</h2>
 					{
 						<Col md={12} className="overflow-hidden">
 							{listOfLinks()}
