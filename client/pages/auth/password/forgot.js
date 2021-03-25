@@ -2,25 +2,26 @@ import { useState } from 'react';
 import axios from 'axios';
 import { showSuccessMessage, showErrorMessage } from '../../../helpers/alerts';
 import { API } from '../../../config';
-import Router from 'next/router';
 import Layout from '../../../components/Layout';
+
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 
 const ForgotPassword = () => {
 	const [state, setState] = useState({
 		email: '',
-		buttonText: 'Forgot Password',
 		success: '',
 		error: '',
 	});
-	const { email, buttonText, success, error } = state;
+	const { email, success, error } = state;
 
-	const handleChange = (e) => {
-		setState({ ...state, email: e.target.value, success: '', error: '' });
-	};
+	const onChange = (e) =>
+		setState({ ...state, [e.target.name]: e.target.value });
 
-	const handleSubmit = async (e) => {
+	const onSubmit = async (e) => {
 		e.preventDefault();
-		// console.log('post email to ', email);
 		try {
 			const response = await axios.put(`${API}/auth/forgot-password`, {
 				email,
@@ -29,48 +30,50 @@ const ForgotPassword = () => {
 			setState({
 				...state,
 				email: '',
-				buttonText: 'Done',
 				success: response.data.message,
 			});
 		} catch (error) {
 			console.log('FORGOT PW ERROR', error);
 			setState({
 				...state,
-				buttonText: 'Forgot Password',
 				error: error.response.data.error,
 			});
 		}
 	};
 
 	const passwordForgotForm = () => (
-		<form onSubmit={handleSubmit}>
-			<div className="form-group">
-				<input
-					type="email"
-					className="form-control"
-					onChange={handleChange}
+		<Form onSubmit={onSubmit}>
+			<Form.Group>
+				<Form.Label>Email</Form.Label>
+				<Form.Control
 					value={email}
+					onChange={onChange}
+					name="email"
+					type="email"
 					placeholder="Type your email"
 					required
 				/>
-			</div>
-			<div>
-				<button className="btn btn-outline-warning">{buttonText}</button>
-			</div>
-		</form>
+			</Form.Group>
+			<br />
+			<Form.Group>
+				<Button name="submit" type="submit" value="submit">
+					Submit
+				</Button>
+			</Form.Group>
+		</Form>
 	);
 
 	return (
 		<Layout>
-			<div className="row">
-				<div className="col-md-6 offset-md-3">
+			<Row>
+				<Col md={6} className="offset-md-3">
 					<h1>Forgot Password</h1>
 					<br />
 					{success && showSuccessMessage(success)}
 					{error && showErrorMessage(error)}
 					{passwordForgotForm()}
-				</div>
-			</div>
+				</Col>
+			</Row>
 		</Layout>
 	);
 };

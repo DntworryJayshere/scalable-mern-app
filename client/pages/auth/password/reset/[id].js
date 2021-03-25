@@ -60,7 +60,7 @@ const ResetPassword = ({ router }) => {
 	const passwordResetForm = () => (
 		<Form onSubmit={onSubmit}>
 			<Form.Group>
-				<Form.Label>Name</Form.Label>
+				<Form.Label>Password</Form.Label>
 				<Form.Control
 					value={newPassword}
 					onChange={onChange}
