@@ -69,18 +69,20 @@ const Links = ({ token, links, totalLinks, linksLimit }) => {
 				<Row>
 					<Col md={12}>
 						<p className="text-dark" style={{ fontSize: '.9rem' }}>
-							<div>
+							<span>
 								Type: {'   '}
 								{l.type}
-							</div>
-							<div>
+							</span>
+						</p>
+						<p className="text-dark" style={{ fontSize: '.9rem' }}>
+							<span>
 								Categories: {'   '}
 								{l.categories.map((c, i) => (
 									<span key={i}>
 										{c.name} , {'   '}
 									</span>
 								))}
-							</div>
+							</span>
 						</p>
 					</Col>
 					<Col md={8}>

@@ -61,18 +61,20 @@ const Home = ({ categories }) => {
 				<Row>
 					<Col md={12}>
 						<p className="text-dark" style={{ fontSize: '.9rem' }}>
-							<div>
+							<span>
 								Type: {'   '}
 								{l.type}
-							</div>
-							<div>
+							</span>
+						</p>
+						<p className="text-dark" style={{ fontSize: '.9rem' }}>
+							<span>
 								Categories: {'   '}
 								{l.categories.map((c, i) => (
 									<span key={i}>
 										{c.name} , {'   '}
 									</span>
 								))}
-							</div>
+							</span>
 						</p>
 					</Col>
 					<Col md={8}>
@@ -95,9 +97,7 @@ const Home = ({ categories }) => {
 						style={{ margin: 'auto', width: '100px', height: '100px' }}
 					/>
 					<Card.Body>
-						<Card.Text>
-							<div>{c.content}</div>
-						</Card.Text>
+						<Card.Text>{c.content}</Card.Text>
 					</Card.Body>
 					<Card.Footer>
 						<Link href={`/links/${c.slug}`}>
