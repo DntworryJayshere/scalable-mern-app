@@ -41,12 +41,21 @@ router.post(
 	requireSignin,
 	authMiddleware,
 	async (req, res) => {
-		const { title, description, url, url2, type, categories } = req.body;
+		const {
+			title,
+			shortdescription,
+			description,
+			url,
+			url2,
+			type,
+			categories,
+		} = req.body;
 		// console.table({ title, url, categories, type, medium });
 		const slug = url;
 		try {
 			let link = new Link({
 				title,
+				shortdescription,
 				description,
 				url,
 				url2,
@@ -235,8 +244,24 @@ router.put(
 	canUpdateDeleteLink,
 	async (req, res) => {
 		const { id } = req.params;
-		const { title, description, url, url2, type, categories } = req.body;
-		const updatedLink = { title, description, url, url2, type, categories };
+		const {
+			title,
+			shortdescription,
+			description,
+			url,
+			url2,
+			type,
+			categories,
+		} = req.body;
+		const updatedLink = {
+			title,
+			shortdescription,
+			description,
+			url,
+			url2,
+			type,
+			categories,
+		};
 		try {
 			Link.findOneAndUpdate({ _id: id }, updatedLink, { new: true }).exec(
 				(err, updated) => {
@@ -266,8 +291,24 @@ router.put(
 	adminMiddleware,
 	async (req, res) => {
 		const { id } = req.params;
-		const { title, description, url, url2, type, categories } = req.body;
-		const updatedLink = { title, description, url, url2, type, categories };
+		const {
+			title,
+			shortdescription,
+			description,
+			url,
+			url2,
+			type,
+			categories,
+		} = req.body;
+		const updatedLink = {
+			title,
+			shortdescription,
+			description,
+			url,
+			url2,
+			type,
+			categories,
+		};
 		try {
 			Link.findOneAndUpdate({ _id: id }, updatedLink, { new: true }).exec(
 				(err, updated) => {

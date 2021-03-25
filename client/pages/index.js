@@ -33,35 +33,53 @@ const Home = ({ categories }) => {
 
 	const listOfLinks = () =>
 		popular.map((l, i) => (
-			<Row key={i} className="alert alert-secondary p-2">
-				<Col md={8} onClick={() => handleClick(l._id)}>
-					<a href={l.url} target="_blank">
-						<h5 className="pt-2">{l.title}</h5>
-						<h6 className="pt-2 text-danger" style={{ fontSize: '12px' }}>
-							{l.url}
-						</h6>
-					</a>
-				</Col>
+			<Row key={i} className="alert alert-primary">
+				<Col md={8}>
+					<h5>Title: {l.title}</h5>
 
-				<Col md={4} className="pt-2">
-					<span className="pull-right">
+					<h6 onClick={() => handleClick(l._id)} style={{ fontSize: '1rem' }}>
+						Main Url: {'   '}
+						<a href={l.url} target="_blank">
+							{l.url}
+						</a>
+					</h6>
+
+					<h6 style={{ fontSize: '1rem' }}>
+						Supplemental Url: {'   '}
+						<a href={l.url2} target="_blank">
+							{l.url2}
+						</a>
+					</h6>
+					<p>Short Description: {l.shortdescription}</p>
+				</Col>
+				<Col md={4} style={{ textAlign: 'right' }}>
+					<span>
 						{moment(l.createdAt).fromNow()} by {l.postedBy.name}
 					</span>
 				</Col>
-
-				<Col md={12}>
-					<span className="badge text-dark">
-						{l.type} {l.medium}
-					</span>
-					{l.categories.map((c, i) => (
-						<span key={i} className="badge text-success">
-							{c.name}
-						</span>
-					))}
-					<span className="badge text-secondary pull-right">
-						{l.clicks} clicks
-					</span>
-				</Col>
+				<Row>
+					<Col md={12}>
+						<p className="text-dark" style={{ fontSize: '.9rem' }}>
+							<div>
+								Type: {'   '}
+								{l.type}
+							</div>
+							<div>
+								Categories: {'   '}
+								{l.categories.map((c, i) => (
+									<span key={i}>
+										{c.name} , {'   '}
+									</span>
+								))}
+							</div>
+						</p>
+					</Col>
+					<Col md={8}>
+						<span className="text-secondary" style={{ textAlign: 'left' }}>
+							{l.clicks} clicks
+						</span>{' '}
+					</Col>
+				</Row>
 			</Row>
 		));
 

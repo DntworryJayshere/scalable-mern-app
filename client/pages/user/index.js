@@ -56,7 +56,7 @@ const User = ({ user, userLinks, token }) => {
 							{l.url2}
 						</a>
 					</h6>
-					<p>Description: {l.description}</p>
+					<p>Short Description: {l.shortdescription}</p>
 				</Col>
 				<Col md={4} style={{ textAlign: 'right' }}>
 					<span>

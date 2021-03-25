@@ -16,6 +16,7 @@ const Update = ({ oldLink, token }) => {
 	// state
 	const [state, setState] = useState({
 		title: oldLink.title,
+		shortdescription: oldLink.shortdescription,
 		description: oldLink.description,
 		url: oldLink.url,
 		url2: oldLink.url2,
@@ -28,6 +29,7 @@ const Update = ({ oldLink, token }) => {
 
 	const {
 		title,
+		shortdescription,
 		description,
 		url,
 		url2,
@@ -88,7 +90,7 @@ const Update = ({ oldLink, token }) => {
 		try {
 			const response = await axios.post(
 				`${API}/link`,
-				{ title, description, url, url2, type, categories },
+				{ title, shortdescription, description, url, url2, type, categories },
 				{
 					headers: {
 						Authorization: `Bearer ${token}`,
@@ -98,6 +100,7 @@ const Update = ({ oldLink, token }) => {
 			setState({
 				...state,
 				title: '',
+				shortdescription: '',
 				description: '',
 				url: '',
 				url2: '',
@@ -152,13 +155,25 @@ const Update = ({ oldLink, token }) => {
 			</Form.Group>
 			<br />
 			<Form.Group>
+				<Form.Label>Short Description</Form.Label>
+				<Form.Control
+					value={shortdescription}
+					onChange={onChange}
+					name="shortdescription"
+					type="text"
+					placeholder="enter a short description"
+					required
+				/>
+			</Form.Group>
+			<br />
+			<Form.Group>
 				<Form.Label>Description</Form.Label>
 				<Form.Control
 					value={description}
 					onChange={onChange}
 					name="description"
 					type="text"
-					placeholder="enter a short description"
+					placeholder="enter a full description"
 					required
 				/>
 			</Form.Group>

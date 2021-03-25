@@ -13,7 +13,9 @@ const Admin = ({ user }) => (
 			<Col md={4}>
 				<ul>
 					<li>
-						<a href="/admin/category/create">Create category</a>
+						<Link href="/admin/category/create">
+							<a>Create category</a>
+						</Link>
 					</li>
 					<li>
 						<Link href="/admin/category/read">
@@ -33,9 +35,33 @@ const Admin = ({ user }) => (
 				</ul>
 			</Col>
 			<Col md={8}>
-				{' '}
-				Stuff to go here --- links are currently working but need to read up on
-				nextjs link syntax{' '}
+				<Row>
+					<Col md={3}>
+						<div>Total Categories:</div>
+					</Col>
+					<Col md={3}>
+						<div>Total Links Clicked:</div>
+					</Col>
+					<Col md={3}>
+						<div>Top 5 Links:</div>
+					</Col>
+					<Col md={3}>
+						<div>New Users:</div>
+					</Col>
+				</Row>
+				<Row>
+					<Col md={6}>
+						<div>Some Graph</div>
+					</Col>
+					<Col md={6}>
+						<div>Some Chart</div>
+					</Col>
+				</Row>
+				<Row>
+					<Col md={12}>
+						<div>Some Table</div>
+					</Col>
+				</Row>
 			</Col>
 		</Row>
 	</Layout>

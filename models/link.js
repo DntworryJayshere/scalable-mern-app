@@ -9,6 +9,12 @@ const linkSchema = new Schema(
 			required: true,
 			max: 256,
 		},
+		shortdescription: {
+			type: {},
+			min: 5,
+			max: 50,
+			required: true,
+		},
 		description: {
 			type: {},
 			min: 5,
