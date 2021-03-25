@@ -72,7 +72,7 @@ const Read = ({ user, token }) => {
 						<small className="text-muted">
 							{' '}
 							<Link href={`/admin/category/${c.slug}`}>
-								<button className="btn btn-sm btn-outline-success btn-block mb-1">
+								<button className="btn btn-sm btn-outline-success btn-block">
 									Update
 								</button>
 							</Link>

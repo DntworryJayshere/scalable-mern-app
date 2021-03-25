@@ -35,7 +35,7 @@ const Layout = ({ children }) => {
 			</Nav.Item>
 			<Nav.Item as="li">
 				<Link href="/user/link/create" passHref>
-					<Nav.Link as="a">Submit a link</Nav.Link>
+					<Nav.Link as="a">Submit Link</Nav.Link>
 				</Link>
 			</Nav.Item>
 
@@ -58,7 +58,7 @@ const Layout = ({ children }) => {
 				<React.Fragment>
 					<Nav.Item as="li">
 						<Link href="/admin" passHref>
-							<Nav.Link as="a">Admin Page</Nav.Link>
+							<Nav.Link as="a">Admin Dashboard</Nav.Link>
 						</Link>
 					</Nav.Item>
 					<Nav.Item as="li">
@@ -73,7 +73,7 @@ const Layout = ({ children }) => {
 				<React.Fragment>
 					<Nav.Item as="li">
 						<Link href="/user" passHref>
-							<Nav.Link as="a">User Page</Nav.Link>
+							<Nav.Link as="a">User Dashboard</Nav.Link>
 						</Link>
 					</Nav.Item>
 					<Nav.Item as="li">

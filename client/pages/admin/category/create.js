@@ -1,45 +1,35 @@
-import dynamic from 'next/dynamic';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import axios from 'axios';
 import Resizer from 'react-image-file-resizer';
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 import { API } from '../../../config';
 import { showSuccessMessage, showErrorMessage } from '../../../helpers/alerts';
 import Layout from '../../../components/Layout';
 import withAdmin from '../../withAdmin';
-import 'react-quill/dist/quill.bubble.css';
 
-const Create = ({ user, token }) => {
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+
+const Create = ({ token }) => {
 	const [state, setState] = useState({
 		name: '',
+		content: '',
+		image: '',
 		error: '',
 		success: '',
-		buttonText: 'Create',
-		image: '',
 	});
-	const [content, setContent] = useState('');
-	const [imageUploadButtonName, setImageUploadButtonName] = useState(
-		'Upload image'
-	);
 
-	const { name, success, error, image, buttonText, imageUploadText } = state;
+	const { name, content, error, success, image } = state;
 
-	const handleChange = (name) => (e) => {
-		setState({ ...state, [name]: e.target.value, error: '', success: '' });
-	};
-
-	const handleContent = (e) => {
-		console.log(e);
-		setContent(e);
-		setState({ ...state, success: '', error: '' });
-	};
+	const onChange = (e) =>
+		setState({ ...state, [e.target.name]: e.target.value });
 
 	const handleImage = (event) => {
 		let fileInput = false;
 		if (event.target.files[0]) {
 			fileInput = true;
 		}
-		setImageUploadButtonName(event.target.files[0].name);
 		if (fileInput) {
 			Resizer.imageFileResizer(
 				event.target.files[0],
@@ -57,9 +47,9 @@ const Create = ({ user, token }) => {
 		}
 	};
 
-	const handleSubmit = async (e) => {
+	const onSubmit = async (e) => {
 		e.preventDefault();
-		setState({ ...state, buttonText: 'Creating' });
+		setState({ ...state });
 		console.table({ name, content, image });
 		try {
 			const response = await axios.post(
@@ -72,78 +62,71 @@ const Create = ({ user, token }) => {
 				}
 			);
 			console.log('CATEGORY CREATE RESPONSE', response);
-			setImageUploadButtonName('Upload image');
-			setContent('');
 			setState({
 				...state,
 				name: '',
-				formData: '',
-				buttonText: 'Created',
-				imageUploadText: 'Upload image',
+				content: '',
+				error: '',
 				success: `${response.data.name} is created`,
 			});
 		} catch (error) {
 			console.log('CATEGORY CREATE ERROR', error);
-			setState({
-				...state,
-				buttonText: 'Create',
-				error: error.response.data.error,
-			});
+			setState({ ...state, error: error.response.data.error });
 		}
 	};
 
 	const createCategoryForm = () => (
-		<form onSubmit={handleSubmit}>
-			<div className="form-group">
-				<label className="text-muted">Name</label>
-				<input
-					onChange={handleChange('name')}
+		<Form onSubmit={onSubmit}>
+			<Form.Group>
+				<Form.Label>Name</Form.Label>
+				<Form.Control
 					value={name}
+					onChange={onChange}
+					name="name"
 					type="text"
-					className="form-control"
+					placeholder="enter the name"
 					required
 				/>
-			</div>
-			<div className="form-group">
-				<label className="text-muted">Content</label>
-				<ReactQuill
+			</Form.Group>
+			<br />
+			<Form.Group>
+				<Form.Label>Description</Form.Label>
+				<Form.Control
+					as="textarea"
+					rows={5}
 					value={content}
-					onChange={handleContent}
-					placeholder="Write something..."
-					theme="bubble"
-					className="pb-5 mb-3"
-					style={{ border: '1px solid #666' }}
+					onChange={onChange}
+					name="content"
+					type="text"
+					placeholder="enter a short description"
+					required
 				/>
-			</div>
-			<div className="form-group">
-				<label className="btn btn-outline-secondary">
-					{imageUploadButtonName}
-					<input
-						onChange={handleImage}
-						type="file"
-						accept="image/*"
-						className="form-control"
-						hidden
-					/>
-				</label>
-			</div>
-			<div>
-				<button className="btn btn-outline-warning">{buttonText}</button>
-			</div>
-		</form>
+			</Form.Group>
+			<br />
+			<Form.Group>
+				<Form.Label>Upload Image: </Form.Label>
+				<Form.File onChange={handleImage} type="file" accept="image/*" />
+			</Form.Group>
+			<br />
+			<Form.Group>
+				<Button name="submit" type="submit" value="Create">
+					Create
+				</Button>
+			</Form.Group>
+		</Form>
 	);
 
 	return (
 		<Layout>
-			<div className="row">
-				<div className="col-md-6 offset-md-3">
+			<Row>
+				<Col md={6} className="offset-md-3">
 					<h1>Create category</h1>
 					<br />
 					{success && showSuccessMessage(success)}
 					{error && showErrorMessage(error)}
 					{createCategoryForm()}
-				</div>
-			</div>
+				</Col>
+			</Row>
 		</Layout>
 	);
 };

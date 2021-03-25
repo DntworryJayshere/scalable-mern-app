@@ -164,6 +164,7 @@ router.get('/popular', async (req, res) => {
 	try {
 		Link.find()
 			.populate('postedBy', 'name')
+			.populate('categories', 'name slug')
 			.sort({ clicks: -1 })
 			.limit(3)
 			.exec((err, links) => {

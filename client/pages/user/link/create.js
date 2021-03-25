@@ -220,6 +220,8 @@ const Create = ({ token }) => {
 			<Form.Group>
 				<Form.Label>Full Description</Form.Label>
 				<Form.Control
+					as="textarea"
+					rows={3}
 					value={description}
 					onChange={onChange}
 					name="description"
@@ -265,7 +267,6 @@ const Create = ({ token }) => {
 			<Row>
 				<Col md={12}>
 					<h1>Submit Link/URL</h1>
-					<br />
 				</Col>
 			</Row>
 			<Row>

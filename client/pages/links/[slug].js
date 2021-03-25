@@ -84,22 +84,6 @@ const Links = ({ query, category, links, totalLinks, linksLimit }) => {
 				</Col>
 				<Row>
 					<Col md={12}>
-						<p className="text-dark" style={{ fontSize: '.9rem' }}>
-							<div>
-								Type: {'   '}
-								{l.type}
-							</div>
-							<div>
-								Categories: {'   '}
-								{l.categories.map((c, i) => (
-									<span key={i}>
-										{c.name} , {'   '}
-									</span>
-								))}
-							</div>
-						</p>
-					</Col>
-					<Col md={8}>
 						<span className="text-secondary" style={{ textAlign: 'left' }}>
 							{l.clicks} clicks
 						</span>{' '}

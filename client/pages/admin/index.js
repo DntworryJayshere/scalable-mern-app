@@ -10,13 +10,8 @@ const Admin = ({ user }) => (
 		<h1>Admin Dashboard</h1>
 		<br />
 		<Row className="row">
-			<Col md={4}>
+			<Col md={3}>
 				<ul>
-					<li>
-						<Link href="/admin/category/create">
-							<a>Create category</a>
-						</Link>
-					</li>
 					<li>
 						<Link href="/admin/category/read">
 							<a>All categories</a>
@@ -28,13 +23,23 @@ const Admin = ({ user }) => (
 						</Link>
 					</li>
 					<li>
+						<Link href="/admin/category/create">
+							<a>Create category</a>
+						</Link>
+					</li>
+					<li>
+						<Link href="/user/link/create">
+							<a>Create Link</a>
+						</Link>
+					</li>
+					<li>
 						<Link href="/user/profile/update">
 							<a>Update Profile</a>
 						</Link>
 					</li>
 				</ul>
 			</Col>
-			<Col md={8}>
+			<Col md={9}>
 				<Row>
 					<Col md={3}>
 						<div>Total Categories:</div>

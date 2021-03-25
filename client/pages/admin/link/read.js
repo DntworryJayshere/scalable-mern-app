@@ -47,47 +47,64 @@ const Links = ({ token, links, totalLinks, linksLimit }) => {
 
 	const listOfLinks = () =>
 		allLinks.map((l, i) => (
-			<Row key={i} className="alert alert-primary p-2">
-				<Col md={8} onClick={(e) => handleClick(l._id)}>
-					<a href={l.url} target="_blank">
-						<h5 className="pt-2">{l.title}</h5>
-						<h6 className="pt-2 text-danger" style={{ fontSize: '12px' }}>
+			<Row key={i} className="alert alert-primary">
+				<Col md={8}>
+					<h5>Title: {l.title}</h5>
+
+					<h6 style={{ fontSize: '1rem' }}>
+						Main Url: {'   '}
+						<a href={l.url} target="_blank">
 							{l.url}
-						</h6>
-					</a>
+						</a>
+					</h6>
+
+					<h6 style={{ fontSize: '1rem' }}>
+						Supplemental Url: {'   '}
+						<a href={l.url2} target="_blank">
+							{l.url2}
+						</a>
+					</h6>
+					<p>Short Description: {l.shortdescription}</p>
 				</Col>
 				<Col md={4} style={{ textAlign: 'right' }}>
 					<span>
 						{moment(l.createdAt).fromNow()} by {l.postedBy.name}
 					</span>
-					<br />
-					<span className="badge text-secondary pull-right">
-						{l.clicks} clicks
-					</span>
 				</Col>
-
-				<Col md={12}>
-					<span className="badge text-dark">
-						{l.type} / {l.medium}
-					</span>
-					{l.categories.map((c, i) => (
-						<span key={i} className="badge text-success">
-							{c.name}
+				<Row>
+					<Col md={12}>
+						<p className="text-dark" style={{ fontSize: '.9rem' }}>
+							<div>
+								Type: {'   '}
+								{l.type}
+							</div>
+							<div>
+								Categories: {'   '}
+								{l.categories.map((c, i) => (
+									<span key={i}>
+										{c.name} , {'   '}
+									</span>
+								))}
+							</div>
+						</p>
+					</Col>
+					<Col md={8}>
+						<span className="text-secondary" style={{ textAlign: 'left' }}>
+							{l.clicks} clicks
+						</span>{' '}
+					</Col>
+					<Col md={4} style={{ textAlign: 'right', cursor: 'pointer' }}>
+						<Link href={`/user/link/${l._id}`}>
+							<span className="text-warning">Update</span>
+						</Link>{' '}
+						<span
+							onClick={(e) => confirmDelete(e, l._id)}
+							className="text-danger"
+						>
+							Delete
 						</span>
-					))}
-
-					<span
-						onClick={(e) => confirmDelete(e, l._id)}
-						className="badge text-danger pull-right"
-					>
-						Delete
-					</span>
-					<Link href={`/user/link/${l._id}`}>
-						<a>
-							<span className="badge text-warning pull-right">Update</span>
-						</a>
-					</Link>
-				</Col>
+					</Col>
+				</Row>
 			</Row>
 		));
 

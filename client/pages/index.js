@@ -94,17 +94,16 @@ const Home = ({ categories }) => {
 						style={{ margin: 'auto', width: '100px', height: '100px' }}
 					/>
 					<Card.Body>
-						<Link href={`/links/${c.slug}`}>
-							<Card.Title as="a">{c.name}</Card.Title>
-						</Link>
 						<Card.Text>
-							This is a wider card with supporting text below as a natural
-							lead-in to additional content. This content is a little bit
-							longer.
+							<div>{c.content}</div>
 						</Card.Text>
 					</Card.Body>
 					<Card.Footer>
-						<small className="text-muted">Last updated 3 mins ago</small>
+						<Link href={`/links/${c.slug}`}>
+							<Card.Title as="a" style={{ cursor: 'pointer' }}>
+								{c.name}
+							</Card.Title>
+						</Link>
 					</Card.Footer>
 				</Card>
 			</Col>
