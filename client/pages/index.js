@@ -51,7 +51,7 @@ const Home = ({ categories }) => {
 						</a>
 					</h6>
 					<p>Short Description: {l.shortdescription}</p>
-					<p>Description: {l.description}</p>
+					<p className="overflow-hidden">Description: {l.description}</p>
 				</Col>
 				<Col md={4} style={{ textAlign: 'right' }}>
 					<span>
@@ -100,7 +100,7 @@ const Home = ({ categories }) => {
 						<Card.Text>{c.content}</Card.Text>
 					</Card.Body>
 					<Card.Footer>
-						<Link href={`/links/${c.slug}`}>
+						<Link href={`/links/${c.slug}`} passHref>
 							<Card.Title as="a" style={{ cursor: 'pointer' }}>
 								{c.name}
 							</Card.Title>

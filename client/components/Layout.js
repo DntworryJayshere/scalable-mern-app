@@ -27,13 +27,13 @@ const Layout = ({ children }) => {
 	);
 
 	const nav = () => (
-		<Nav className="justify-content-center" as="ul">
-			<Nav.Item as="li">
+		<Nav className="justify-content-center">
+			<Nav.Item>
 				<Link href="/" passHref>
 					<Nav.Link as="a">Home</Nav.Link>
 				</Link>
 			</Nav.Item>
-			<Nav.Item as="li">
+			<Nav.Item>
 				<Link href="/user/link/create" passHref>
 					<Nav.Link as="a">Submit Link</Nav.Link>
 				</Link>
@@ -41,12 +41,12 @@ const Layout = ({ children }) => {
 
 			{!isAuth() && (
 				<React.Fragment>
-					<Nav.Item as="li">
+					<Nav.Item>
 						<Link href="/login" passHref>
 							<Nav.Link as="a">Login</Nav.Link>
 						</Link>
 					</Nav.Item>
-					<Nav.Item as="li">
+					<Nav.Item>
 						<Link href="/register" passHref>
 							<Nav.Link as="a">Register</Nav.Link>
 						</Link>
@@ -56,12 +56,12 @@ const Layout = ({ children }) => {
 
 			{isAuth() && isAuth().role === 'admin' && (
 				<React.Fragment>
-					<Nav.Item as="li">
+					<Nav.Item>
 						<Link href="/admin" passHref>
 							<Nav.Link as="a">Admin Dashboard</Nav.Link>
 						</Link>
 					</Nav.Item>
-					<Nav.Item as="li">
+					<Nav.Item>
 						<Nav.Link style={{ cursor: 'pointer' }} as="a" onClick={logout}>
 							Logout
 						</Nav.Link>
@@ -71,12 +71,12 @@ const Layout = ({ children }) => {
 
 			{isAuth() && isAuth().role === 'subscriber' && (
 				<React.Fragment>
-					<Nav.Item as="li">
+					<Nav.Item>
 						<Link href="/user" passHref>
 							<Nav.Link as="a">User Dashboard</Nav.Link>
 						</Link>
 					</Nav.Item>
-					<Nav.Item as="li">
+					<Nav.Item>
 						<Nav.Link style={{ cursor: 'pointer' }} as="a" onClick={logout}>
 							Logout
 						</Nav.Link>

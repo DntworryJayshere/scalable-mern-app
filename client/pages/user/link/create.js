@@ -221,11 +221,11 @@ const Create = ({ token }) => {
 				<Form.Label>Full Description</Form.Label>
 				<Form.Control
 					as="textarea"
-					rows={3}
+					rows={5}
 					value={description}
 					onChange={onChange}
 					name="description"
-					type="text"
+					type="textarea"
 					placeholder="enter a full description"
 					required
 				/>

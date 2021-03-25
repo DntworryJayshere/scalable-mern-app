@@ -169,10 +169,12 @@ const Update = ({ oldLink, token }) => {
 			<Form.Group>
 				<Form.Label>Description</Form.Label>
 				<Form.Control
+					as="textarea"
+					rows={5}
 					value={description}
 					onChange={onChange}
 					name="description"
-					type="text"
+					type="textarea"
 					placeholder="enter a full description"
 					required
 				/>

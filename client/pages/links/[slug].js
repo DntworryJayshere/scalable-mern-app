@@ -61,7 +61,7 @@ const Links = ({ query, category, links, totalLinks, linksLimit }) => {
 	const listOfPopularLinks = () =>
 		popular.map((l, i) => (
 			<Row key={i} className="alert alert-primary">
-				<Col md={8}>
+				<Col md={12}>
 					<h5>Title: {l.title}</h5>
 					<h6 onClick={(e) => handleClick(l._id)} style={{ fontSize: '1rem' }}>
 						Main Url: {'   '}
@@ -69,19 +69,7 @@ const Links = ({ query, category, links, totalLinks, linksLimit }) => {
 							{l.url}
 						</a>
 					</h6>
-					<h6 style={{ fontSize: '1rem' }}>
-						Supplemental Url: {'   '}
-						<a href={l.url2} target="_blank">
-							{l.url2}
-						</a>
-					</h6>
 					<p>Short Description: {l.shortDescription}</p>
-					<p>Description: {l.Description}</p>
-				</Col>
-				<Col md={4} style={{ textAlign: 'right' }}>
-					<span>
-						{moment(l.createdAt).fromNow()} by {l.postedBy.name}
-					</span>
 				</Col>
 				<Row>
 					<Col md={12}>
