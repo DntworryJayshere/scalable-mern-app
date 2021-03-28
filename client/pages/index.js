@@ -12,7 +12,6 @@ import Card from 'react-bootstrap/Card';
 import CardGroup from 'react-bootstrap/CardGroup';
 
 //fully tested (unauthenticated, authenticated user, authenticated admin)
-
 const Home = ({ categories }) => {
 	const [popular, setPopular] = useState([]);
 
@@ -50,14 +49,18 @@ const Home = ({ categories }) => {
 							{l.url2}
 						</a>
 					</h6>
-					<p>Short Description: {l.shortdescription}</p>
-					<p className="overflow-hidden">Description: {l.description}</p>
 				</Col>
 				<Col md={4} style={{ textAlign: 'right' }}>
 					<span>
 						{moment(l.createdAt).fromNow()} by {l.postedBy.name}
 					</span>
 				</Col>
+				<Row>
+					<Col md={12}>
+						<p>Short Description: {l.shortdescription}</p>
+						<p>Description: {l.description}</p>
+					</Col>
+				</Row>
 				<Row>
 					<Col md={12}>
 						<p className="text-dark" style={{ fontSize: '.9rem' }}>
@@ -118,14 +121,10 @@ const Home = ({ categories }) => {
 						<h1 className="font-weight-bold">Browse Categories</h1>
 						<br />
 					</Col>
+					<CardGroup style={{ display: 'flex' }}>{listCategories()}</CardGroup>
 				</Row>
-
-				<CardGroup style={{ display: 'flex' }}>{listCategories()}</CardGroup>
-
 				<Row>
-					<h2 className="font-weight-bold pb-3">
-						Trending Links {popular.length}
-					</h2>
+					<h1 className="font-weight-bold">Trending Links {popular.length}</h1>
 					{
 						<Col md={12} className="overflow-hidden">
 							{listOfLinks()}

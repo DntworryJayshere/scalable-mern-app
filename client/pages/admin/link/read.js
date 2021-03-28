@@ -57,15 +57,18 @@ const Links = ({ token, links, totalLinks, linksLimit }) => {
 							{l.url2}
 						</a>
 					</h6>
-					<div>Short Description: {l.shortdescription}</div>
-					<div>Description: {l.description}</div>
-					<br />
 				</Col>
 				<Col md={4} style={{ textAlign: 'right' }}>
 					<span>
 						{moment(l.createdAt).fromNow()} by {l.postedBy.name}
 					</span>
 				</Col>
+				<Row>
+					<Col md={12}>
+						<p>Short Description: {l.shortdescription}</p>
+						<p>Description: {l.description}</p>
+					</Col>
+				</Row>
 				<Row>
 					<Col md={12}>
 						<p className="text-dark" style={{ fontSize: '.9rem' }}>

@@ -84,30 +84,39 @@ const Links = ({ query, category, links, totalLinks, linksLimit }) => {
 	const listOfLinks = () =>
 		allLinks.map((l, i) => (
 			<Row key={i} className="alert alert-primary">
-				<Col md={8}>
-					<h5>Title: {l.title}</h5>
+				<Row>
+					<Col md={8}>
+						<h5>Title: {l.title}</h5>
 
-					<h6 onClick={(e) => handleClick(l._id)} style={{ fontSize: '1rem' }}>
-						Main Url: {'   '}
-						<a href={l.url} target="_blank">
-							{l.url}
-						</a>
-					</h6>
+						<h6
+							onClick={(e) => handleClick(l._id)}
+							style={{ fontSize: '1rem' }}
+						>
+							Main Url: {'   '}
+							<a href={l.url} target="_blank">
+								{l.url}
+							</a>
+						</h6>
 
-					<h6 style={{ fontSize: '1rem' }}>
-						Supplemental Url: {'   '}
-						<a href={l.url2} target="_blank">
-							{l.url2}
-						</a>
-					</h6>
-					<p>Short Description: {l.shortdescription}</p>
-					<p>Description: {l.description}</p>
-				</Col>
-				<Col md={4} style={{ textAlign: 'right' }}>
-					<span>
-						{moment(l.createdAt).fromNow()} by {l.postedBy.name}
-					</span>
-				</Col>
+						<h6 style={{ fontSize: '1rem' }}>
+							Supplemental Url: {'   '}
+							<a href={l.url2} target="_blank">
+								{l.url2}
+							</a>
+						</h6>
+					</Col>
+					<Col md={4} style={{ textAlign: 'right' }}>
+						<span>
+							{moment(l.createdAt).fromNow()} by {l.postedBy.name}
+						</span>
+					</Col>
+				</Row>
+				<Row>
+					<Col md={12}>
+						<p>Short Description: {l.shortdescription}</p>
+						<p>Description: {l.description}</p>
+					</Col>
+				</Row>
 				<Row>
 					<Col md={12}>
 						<p className="text-dark" style={{ fontSize: '.9rem' }}>
@@ -155,10 +164,8 @@ const Links = ({ query, category, links, totalLinks, linksLimit }) => {
 			<Layout>
 				<Row>
 					<Col md={8}>
-						<h1 className="display-4 font-weight-bold">
-							{category.name} - URL/Links
-						</h1>
-						<div className="lead alert alert-secondary pt-4">
+						<h1 className="font-weight-bold">{category.name} - URL/Links</h1>
+						<div className="lead alert alert-secondary">
 							{renderHTML(category.content || '')}
 						</div>
 					</Col>

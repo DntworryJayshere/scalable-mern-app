@@ -45,18 +45,16 @@ router.post(
 		try {
 			User.findOne({ email }).exec((err, user) => {
 				if (user) {
-					console.log(err);
-					return res
-						.status(400)
-						.json({ errors: [{ msg: 'User already exists' }] });
+					return res.status(400).json({
+						error: 'Email is taken',
+					});
 				}
-
 				// generate token with user name email and password
 				const token = jwt.sign(
 					{ name, email, password, categories },
 					process.env.JWT_ACCOUNT_ACTIVATION,
 					{
-						expiresIn: '10d',
+						expiresIn: '10m',
 					}
 				);
 
@@ -68,7 +66,7 @@ router.post(
 				sendEmailOnRegister
 					.then((data) => {
 						console.log('email submitted to SES', data);
-						return res.json({
+						res.json({
 							message: `Email has been sent to ${email}, Follow the instructions to complete your registration`,
 						});
 					})

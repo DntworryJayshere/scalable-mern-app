@@ -56,14 +56,18 @@ const User = ({ user, userLinks, token }) => {
 							{l.url2}
 						</a>
 					</h6>
-					<p>Short Description: {l.shortdescription}</p>
-					<p>Description: {l.description}</p>
 				</Col>
 				<Col md={4} style={{ textAlign: 'right' }}>
 					<span>
 						{moment(l.createdAt).fromNow()} by {l.postedBy.name}
 					</span>
 				</Col>
+				<Row>
+					<Col md={12}>
+						<p>Short Description: {l.shortdescription}</p>
+						<p>Description: {l.description}</p>
+					</Col>
+				</Row>
 				<Row>
 					<Col md={12}>
 						<p className="text-dark" style={{ fontSize: '.9rem' }}>
@@ -110,9 +114,18 @@ const User = ({ user, userLinks, token }) => {
 			<hr />
 			<Row>
 				<Col md={2}>
-					<Link href="/user/profile/update">
-						<a className="nav link">Update profile</a>
-					</Link>
+					<ul>
+						<li>
+							<Link href="/user/link/create">
+								<a>Create Link</a>
+							</Link>
+						</li>
+						<li>
+							<Link href="/user/profile/update">
+								<a>Update Profile</a>
+							</Link>
+						</li>
+					</ul>
 				</Col>
 				<Col md={10}>
 					<h2>Your links</h2>

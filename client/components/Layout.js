@@ -34,6 +34,11 @@ const Layout = ({ children }) => {
 				</Link>
 			</Nav.Item>
 			<Nav.Item>
+				<Link href="/about" passHref>
+					<Nav.Link as="a">About</Nav.Link>
+				</Link>
+			</Nav.Item>
+			<Nav.Item>
 				<Link href="/user/link/create" passHref>
 					<Nav.Link as="a">Submit Link</Nav.Link>
 				</Link>
