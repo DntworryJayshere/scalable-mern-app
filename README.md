@@ -1,2 +1,5 @@
 # scalable-mern-app
-MERN app using NextJS that will be deployed through AWS
+What is scalableapp.cloud?
+Scalableapp.cloud represents a focal point for all of the Applications/Projects I’ve built, Repositories I’ve committed to, Documents I've earned, Tutorials I’ve completed, and Resources I frequent.
+
+From a technical perspective - scalableapp.cloud originated as a full-stack MongoDB Atlas, Express, React, and Node.js (MERN) application. The registration, reset password, and link posting functionalities integrate with AWS Simple Email Service(SES). AWS Simple Storage Service(S3) stores all Category images. Next.js is utilized to deliver static and server-side rendered webpages at runtime, and React-Bootstrap provides layout/component structure and styling. PM2 is the production daemon process manager. Nginx functions as the web server and reverse proxy. The application is running on an Ubuntu Server Application Machine Image(AMI) on an Elastic Compute Cloud(EC2) instance. The Domain was purchased through namecheap, and the SSL Cert obtained through letsencrypt.
