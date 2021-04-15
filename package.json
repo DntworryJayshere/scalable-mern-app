@@ -5,9 +5,11 @@
 	"main": "server.js",
 	"homepage": "https://github.com/DntworryJayshere/scalable-mern-app#readme",
 	"scripts": {
+		"install": "npm install && cd client && npm install",
 		"start": "node server.js",
 		"server": "nodemon server.js",
 		"client": "cd client && npm run devC",
+		"buildA": "cd client && npm run build",
 		"dev": "concurrently \"npm run server\" \"npm run client\"",
 		"ree": "rm -rf node_modules/ && cd client && rm -rf node_modules/"
 	},
