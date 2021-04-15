@@ -4,7 +4,7 @@ module.exports = withCSS({
 		APP_NAME: 'NODE-REACT-AWS',
 		API: '/api',
 		PRODUCTION: true,
-		DOMAIN: 'https://scalableapp.cloud',
+		DOMAIN: 'https://development.scalableapp.cloud',
 	},
 });
 
