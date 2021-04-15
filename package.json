@@ -6,7 +6,7 @@
 	"homepage": "https://github.com/DntworryJayshere/scalable-mern-app#readme",
 	"scripts": {
 		"server-dependencies": "npm install",
-		"client-dependencies": "npm install --prefix client",
+		"client-dependencies": "cd client && npm install",
 		"install-all-deps": "concurrently \"npm run server-dependencies\" \"npm run client-dependencies\"",
 		"start": "node server.js",
 		"server": "nodemon server.js",
